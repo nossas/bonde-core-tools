@@ -12,6 +12,7 @@ const FETCH_USER = gql`
       lastName
       email
       createdAt
+      avatar
     }
   }
 `;

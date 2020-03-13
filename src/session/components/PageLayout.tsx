@@ -1,15 +1,18 @@
 import React from 'react';
-import { Route } from 'react-router';
 import styled from 'styled-components';
 import { Header, Page, Flexbox2 as Flexbox, Footer } from 'bonde-styleguide';
-import { SessionHOC } from '../SessionProvider';
+import { useSession } from '../SessionProvider';
 import UserDropdown from './UserDropdown';
 import CommunitiesDropdown from './CommunitiesDropdown';
 
-const SessionHeader = SessionHOC((props: any) => {
+const SessionHeader = () => {
   const {
-    session: { user, logout, communities, community, onChangeCommunity },
-  } = props;
+    user,
+    logout,
+    communities,
+    community,
+    onChangeCommunity,
+  } = useSession();
 
   return (
     <Header>
@@ -23,7 +26,7 @@ const SessionHeader = SessionHOC((props: any) => {
       </Flexbox>
     </Header>
   );
-});
+};
 
 const Main = styled.main`
   display: flex;
@@ -34,36 +37,10 @@ const StyledFooter = styled(Footer)`
   position: relative;
 `;
 
-const SessionPage = ({ children, ...props }: any) => (
+export const SessionPage = ({ children, ...props }: any) => (
   <Main>
     <SessionHeader />
     <Page {...props}>{children}</Page>
     <StyledFooter fixed />
   </Main>
 );
-
-interface PageLayoutProps {
-  path: string;
-  component: any;
-  componentProps?: object;
-  pageProps?: object;
-}
-
-const PageLayout: React.FC<PageLayoutProps> = props => {
-  const { component: Component, pageProps, componentProps, ...rest } = props;
-
-  return (
-    <Route
-      {...rest}
-      render={matchProps => {
-        return (
-          <SessionPage {...(pageProps || {})}>
-            <Component {...matchProps} {...(componentProps || {})} />
-          </SessionPage>
-        );
-      }}
-    />
-  );
-};
-
-export default PageLayout;

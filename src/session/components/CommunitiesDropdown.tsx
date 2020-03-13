@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dropdown, DropdownItem, Flexbox2 as Flexbox } from 'bonde-styleguide';
 import ImageColumn from './ImageColumn';
+import { Community } from '../types';
 
 const CommunityItem = (props: any = {}) => (
   <Flexbox horizontal middle justify="end">
@@ -9,15 +10,10 @@ const CommunityItem = (props: any = {}) => (
   </Flexbox>
 );
 
-interface Community {
-  id: number;
-  name: string;
-}
-
 interface CommunitiesDropdownProps {
   communities?: Community[];
   community?: Community;
-  onChange: any;
+  onChange: Function;
 }
 
 const CommunitiesDropdown = ({

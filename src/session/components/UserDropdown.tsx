@@ -7,13 +7,7 @@ import {
   Icon,
   Text,
 } from 'bonde-styleguide';
-
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatar?: string;
-}
+import { User } from '../types';
 
 interface UserDropdownProps {
   user: User;

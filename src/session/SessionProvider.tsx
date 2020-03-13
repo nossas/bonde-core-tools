@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { FullPageLoading } from 'bonde-styleguide';
 import { ApolloProvider } from '@apollo/react-hooks';
 import SessionStorage from './SessionStorage';
@@ -6,23 +6,18 @@ import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
 import FetchCommunities from './FetchCommunities';
 import redirectToLogin from './redirectToLogin';
+import { Context } from './types';
 
 /**
  * Responsible to control session used on cross-storage
  **/
-
-type Context = {
-  signing: boolean;
-  authenticated: boolean;
-  community?: object;
-};
 
 const SessionContext = createContext({
   signing: true,
   authenticated: false,
 } as Context);
 
-export default function SessionProvider({ children }: any) {
+export default function SessionProvider({ children, SessionLayout }: any) {
   const [defaultCommunity, setDefaultCommunity] = useState(undefined);
   const [token, setToken] = useState(undefined);
   const [session, setSession] = useState({
@@ -97,7 +92,11 @@ export default function SessionProvider({ children }: any) {
               <SessionContext.Provider
                 value={{ ...sessionProps, ...user, ...communities }}
               >
-                {children}
+                {!!SessionLayout ? (
+                  <SessionLayout>{children}</SessionLayout>
+                ) : (
+                  children
+                )}
               </SessionContext.Provider>
             )}
           </FetchCommunities>
@@ -106,6 +105,10 @@ export default function SessionProvider({ children }: any) {
     </ApolloProvider>
   );
 }
+
+export const useSession = () => {
+  return useContext(SessionContext);
+};
 
 export const SessionHOC = (WrappedComponent: any, opts?: any) =>
   class extends React.Component {
