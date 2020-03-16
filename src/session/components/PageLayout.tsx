@@ -40,7 +40,9 @@ const StyledFooter = styled(Footer)`
 export const SessionPage = ({ children, ...props }: any) => (
   <Main>
     <SessionHeader />
-    <Page {...props}>{children}</Page>
+    <Page style={{ flexGrow: 1 }} {...props}>
+      {children}
+    </Page>
     <StyledFooter fixed />
   </Main>
 );

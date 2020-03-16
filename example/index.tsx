@@ -16,7 +16,7 @@ const UserInfo = () => {
 
 const App = () => {
   return (
-    <SessionProvider SessionLayout={SessionPage}>
+    <SessionProvider baseLayout={SessionPage}>
       <Router history={history}>
         <Route path="/" component={UserInfo} />
       </Router>

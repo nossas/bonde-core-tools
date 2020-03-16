@@ -1,12 +1,8 @@
-# TSDX React User Guide
+# bonde-core-tools User Guide
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+Congrats!
 
-> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
-
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
+## Development Commands
 
 TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
 
@@ -32,45 +28,94 @@ To do a one-off build, use `npm run build` or `yarn build`.
 
 To run tests, use `npm test` or `yarn test`.
 
-## Configuration
+## API Reference
 
-Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+### Components
 
-### Jest
+#### SessionProvider
 
-Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
+A provider of session for applications "Bonde React", based on [https://github.com/apollographql/apollo-client](apollo-client) and [https://github.com/zendesk/cross-storage](cross-storage).
 
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```shell
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+```typescript
+interface SessionProviderProps {
+  children: any;
+  // Base component for rendering. When property is null, only children is rendered.
+  // 
+  baseLayout?: React.Component;
+}
 ```
 
-#### React Testing Library
+**API request**
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+1. Fetch Session on cross-storage
+2. Fetch User on api-graphql
+3. Fetch Communities on api-graphql
 
-### Rollup
+**Types and Context**
 
-TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+```typescript
+type User = {
+  id: number;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  createdAt: string;
+  avatar?: string;
+};
 
-### TypeScript
+type Community = {
+  id: number;
+  name: string;
+  city: string;
+  image?: string;
+  created_at: string;
+  updated_at: string;
+};
 
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
+type Context = {
+  signing: boolean;
+  authenticated: boolean;
+  community?: Community;
+  communities: Community[];
+  user: User;
+  logout: Function;
+  onChangeCommunity: Function;
+};
+```
+
+#### SessionPage (baseLayout)
+
+Render a page based on `bonde-styleguide` with Header and Footer, to view content with height full size you should setup index.html with following style.
+
+```css
+html, body, #root {
+  height: 100%;
+}
+```
+
+**NOTE:** We recommend using this component to render the base of your application, it already has a menu for community selection and a menu with user functions such as logout for example.
+
+#### Full example
+
+```typescript
+import { SessionProvider, SessionPage, useSession } from 'bonde-core-tools'
+
+export default () => (
+  <SessionProvider baseLayout={SessionPage}>
+    {/* children / routing */}
+  </SessionProvider>
+)
+```
+
+### HOCs
+
+#### useSession
+
+Returns the information stored in the session context, it can only be called below the SessionProvider.
+
+```typescript
+import { useSession } from 'bonde-core-tools'
+```
 
 ## Continuous Integration
 
@@ -81,87 +126,3 @@ _to be completed_
 ### Circle
 
 _to be completed_
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
-```
-
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
-
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Using the Playground
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
-
-## Deploying the Playground
-
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
-```
-
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
-
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)

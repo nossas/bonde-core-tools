@@ -17,7 +17,15 @@ const SessionContext = createContext({
   authenticated: false,
 } as Context);
 
-export default function SessionProvider({ children, SessionLayout }: any) {
+interface SessionProviderProps {
+  children: any;
+  baseLayout: typeof React.Component;
+}
+
+export default function SessionProvider({
+  children,
+  baseLayout: BaseLayout,
+}: SessionProviderProps) {
   const [defaultCommunity, setDefaultCommunity] = useState(undefined);
   const [token, setToken] = useState(undefined);
   const [session, setSession] = useState({
@@ -92,11 +100,7 @@ export default function SessionProvider({ children, SessionLayout }: any) {
               <SessionContext.Provider
                 value={{ ...sessionProps, ...user, ...communities }}
               >
-                {!!SessionLayout ? (
-                  <SessionLayout>{children}</SessionLayout>
-                ) : (
-                  children
-                )}
+                {!!BaseLayout ? <BaseLayout>{children}</BaseLayout> : children}
               </SessionContext.Provider>
             )}
           </FetchCommunities>
