@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Thing } from '../src';
+
+const Thing = (): React.ReactElement<any, any> => <p>Thing</p>;
 
 describe('it', () => {
   it('renders without crashing', () => {
