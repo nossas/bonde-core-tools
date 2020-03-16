@@ -19,7 +19,7 @@ const SessionContext = createContext({
 
 interface SessionProviderProps {
   children: any;
-  baseLayout: typeof React.Component;
+  baseLayout: any;
 }
 
 export default function SessionProvider({
