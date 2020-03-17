@@ -1920,10 +1920,10 @@ bluebird@3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-bonde-styleguide@^0.16.4:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/bonde-styleguide/-/bonde-styleguide-0.16.4.tgz#9ea63c0efda64265cd69404a9d891f738bd9f63c"
-  integrity sha512-QgZd08TpTsaVPbr1hmwaonwREuwVVh8Dr5D07czmC2TuVICCOZHgnB8wSo4poy+IZJxYziYGV6BAhs5hvyKqaA==
+bonde-styleguide@0.16.5-alpha.5:
+  version "0.16.5-alpha.5"
+  resolved "https://registry.yarnpkg.com/bonde-styleguide/-/bonde-styleguide-0.16.5-alpha.5.tgz#82479b3eb2292d7e665990de9a4c3ab6109d2dea"
+  integrity sha512-9RhVcjTdLPto+bcOhYaCOCWt9k40pbVertys+4fK5rWY9sjJow2hUCe1BUWmr/DpordxuNkqXcrIIfoR11OD+Q==
   dependencies:
     "@babel/plugin-proposal-class-properties" "^7.5.5"
     "@babel/plugin-transform-runtime" "^7.5.5"
