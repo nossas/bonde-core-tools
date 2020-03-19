@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { FullPageLoading } from 'bonde-styleguide';
 import { useQuery } from '@apollo/react-hooks';
 
 const FETCH_RELATED_COMMUNITIES = gql`
@@ -16,16 +15,19 @@ const FETCH_RELATED_COMMUNITIES = gql`
   }
 `;
 
-export default ({ children, variables, defaultCommunity, onChange }: any) => {
+export default ({
+  children,
+  variables,
+  defaultCommunity,
+  onChange,
+  loading: Loading,
+}: any) => {
   const [community, setCommunity] = useState(defaultCommunity);
   const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES, {
     variables,
   });
 
-  if (loading)
-    return (
-      <FullPageLoading bgColor="#fff" message="Carregando comunidades..." />
-    );
+  if (loading) return <Loading fetching="communities" />;
 
   if (error || !data.communities) {
     console.log('error', { error, data });

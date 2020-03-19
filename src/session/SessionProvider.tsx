@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { FullPageLoading } from 'bonde-styleguide';
 import { ApolloProvider } from '@apollo/react-hooks';
 import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
@@ -17,13 +16,19 @@ const SessionContext = createContext({
   authenticated: false,
 } as Context);
 
+interface LoadingProps {
+  fetching: 'session' | 'user' | 'communities';
+}
+
 interface SessionProviderProps {
   children: any;
+  loading: React.FC<LoadingProps>;
   config: Config;
 }
 
 const SessionProvider: React.FC<SessionProviderProps> = ({
   children,
+  loading: Loading,
   config,
 }) => {
   const [defaultCommunity, setDefaultCommunity] = useState(undefined);
@@ -86,17 +91,18 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   };
 
   return session.signing ? (
-    <FullPageLoading bgColor="#fff" message="Carregando sessão..." />
+    <Loading fetching="session" />
   ) : (
     <ApolloProvider
       client={createGraphQLClient(config.graphqlApiUrl, sessionProps)}
     >
       {/* Impplements provider with token recovered on cross-storage */}
       {/* TODO: This logout should be reviewed. */}
-      <FetchUser logout={logout}>
+      <FetchUser loading={Loading} logout={logout}>
         {/* Check token validate and recovery user infos */}
         {(user: any) => (
           <FetchCommunities
+            loading={Loading}
             variables={{ userId: user.user.id }}
             defaultCommunity={defaultCommunity}
             onChange={setCommunityOnStorage}

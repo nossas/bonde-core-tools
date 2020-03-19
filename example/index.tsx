@@ -8,6 +8,32 @@ import { BondeSessionProvider, BondeSessionUI, useSession } from '../.';
 
 const history = createBrowserHistory();
 
+const LoadingStyles = {
+  display: 'flex',
+  background: '#fff',
+  width: '100%',
+  height: '100vh',
+}
+
+const TextStyles = {
+  color: '#000'
+  textAlign: 'center',
+  margin: 'auto'
+}
+
+const Loading = ({ fetching }) => {
+  const messages = {
+    session: 'Carregando sessão...',
+    user: 'Carregando usuário...',
+    communities: 'Carregando communities...'
+  }
+  return (
+    <div style={LoadingStyles}>
+      <h3 style={TextStyles}>{messages[fetching]}</h3>
+    </div>
+  )
+}
+
 const UserInfo = () => {
   const { community, user } = useSession();
 
@@ -35,7 +61,7 @@ const config = {
 
 const App = () => {
   return (
-    <BondeSessionProvider config={config}>
+    <BondeSessionProvider loading={Loading} config={config}>
       <Router history={history}>
         <BondeSessionUI.Main indexRoute='/'>
           <TestSubNavbar />
