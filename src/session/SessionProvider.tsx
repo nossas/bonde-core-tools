@@ -19,15 +19,13 @@ const SessionContext = createContext({
 
 interface SessionProviderProps {
   children: any;
-  baseLayout: any;
   config: Config;
 }
 
-export default function SessionProvider({
+const SessionProvider: React.FC<SessionProviderProps> = ({
   children,
   config,
-  baseLayout: BaseLayout,
-}: SessionProviderProps) {
+}) => {
   const [defaultCommunity, setDefaultCommunity] = useState(undefined);
   const [token, setToken] = useState(undefined);
   const [session, setSession] = useState({
@@ -107,7 +105,7 @@ export default function SessionProvider({
               <SessionContext.Provider
                 value={{ ...sessionProps, ...user, ...communities }}
               >
-                {!!BaseLayout ? <BaseLayout>{children}</BaseLayout> : children}
+                {children}
               </SessionContext.Provider>
             )}
           </FetchCommunities>
@@ -115,7 +113,7 @@ export default function SessionProvider({
       </FetchUser>
     </ApolloProvider>
   );
-}
+};
 
 export const useSession = () => {
   return useContext(SessionContext);
@@ -133,3 +131,5 @@ export const SessionHOC = (WrappedComponent: any, opts?: any) =>
       );
     }
   };
+
+export default SessionProvider;

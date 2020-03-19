@@ -2,11 +2,11 @@ import React from 'react';
 import CommunitiesDropdown from './CommunitiesDropdown';
 import { Main, Footer, Navbar, Body } from 'bonde-components';
 
-interface SessionPageProps {
+interface BondeSessionUIProps {
   indexRoute: string;
 }
 
-export const SessionPage: React.FC<SessionPageProps> = ({
+const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
   children,
   indexRoute,
 }) => {
@@ -15,8 +15,13 @@ export const SessionPage: React.FC<SessionPageProps> = ({
       <Navbar indexRoute={indexRoute} brand="small">
         <CommunitiesDropdown />
       </Navbar>
-      <Body>{children}</Body>
+      {children}
       <Footer />
     </Main>
   );
+};
+
+export default {
+  Main: BondeSessionUI,
+  Content: Body,
 };

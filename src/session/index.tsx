@@ -1,4 +1,4 @@
-export { default as SessionProvider } from './SessionProvider';
+export { default as BondeSessionProvider } from './SessionProvider';
 export { SessionHOC, useSession } from './SessionProvider';
-export { SessionPage } from './components/PageLayout';
+export { default as BondeSessionUI } from './components/BondeSessionUI';
 export { useQuery, useMutation } from '@apollo/react-hooks';
