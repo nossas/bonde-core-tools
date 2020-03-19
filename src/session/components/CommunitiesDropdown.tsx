@@ -1,46 +1,34 @@
 import React from 'react';
 import {
   Dropdown,
+  DropdownImageInput,
   DropdownImageItem,
-  Spacing,
-  Icon,
-  Flexbox2 as Flexbox,
-} from 'bonde-styleguide';
-import { Community } from '../types';
+} from 'bonde-components';
+import { useSession } from '../SessionProvider';
 
-interface CommunitiesDropdownProps {
-  communities?: Community[];
-  community?: Community;
-  onChange: Function;
-}
+const toItem = (c: any) =>
+  !!c
+    ? {
+        img: { src: c.image || 'https://via.placeholder.com/100', alt: c.name },
+        label: c.name,
+        id: c.id,
+      }
+    : undefined;
 
-const CommunitiesDropdown = ({
-  communities = [],
-  community,
-  onChange,
-}: CommunitiesDropdownProps) => {
+const CommunitiesDropdown = () => {
+  const { community, communities, onChangeCommunity } = useSession();
+
   return (
-    <Flexbox horizontal align="center">
-      <Spacing margin={{ right: 10 }}>
-        <Icon name="bonde" size={20} />
-      </Spacing>
-      <Dropdown
-        placeholder="Selecione uma comunidade"
-        item={community ? { label: community.name } : undefined}
-        list={communities.map(c => ({
-          img: {
-            src: c.image || 'https://via.placeholder.com/35',
-            alt: c.name,
-          },
-          label: c.name,
-          id: c.id,
-        }))}
-        onSelect={({ id }: any) =>
-          onChange(communities.filter(c => c.id === id)[0])
-        }
-        dropdownItem={DropdownImageItem}
-      />
-    </Flexbox>
+    <Dropdown
+      placeholder="Selecione uma comunidade"
+      item={toItem(community)}
+      items={communities.map(toItem)}
+      onSelect={(value: any) => {
+        onChangeCommunity(communities.find(c => c.id === value.id));
+      }}
+      dropdownInput={DropdownImageInput}
+      dropdownItem={DropdownImageItem}
+    />
   );
 };
 

@@ -1,48 +1,22 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Header, Page, Flexbox2 as Flexbox, Footer } from 'bonde-styleguide';
-import { useSession } from '../SessionProvider';
-import UserDropdown from './UserDropdown';
 import CommunitiesDropdown from './CommunitiesDropdown';
+import { Main, Footer, Navbar, Body } from 'bonde-components';
 
-const SessionHeader = () => {
-  const {
-    user,
-    logout,
-    communities,
-    community,
-    onChangeCommunity,
-  } = useSession();
+interface SessionPageProps {
+  indexRoute: string;
+}
 
+export const SessionPage: React.FC<SessionPageProps> = ({
+  children,
+  indexRoute,
+}) => {
   return (
-    <Header>
-      <Flexbox horizontal spacing="between">
-        <CommunitiesDropdown
-          communities={communities}
-          community={community}
-          onChange={onChangeCommunity}
-        />
-        <UserDropdown user={user} logout={logout} />
-      </Flexbox>
-    </Header>
+    <Main>
+      <Navbar indexRoute={indexRoute} brand="small">
+        <CommunitiesDropdown />
+      </Navbar>
+      <Body>{children}</Body>
+      <Footer />
+    </Main>
   );
 };
-
-const Main = styled.main`
-  display: flex;
-  flex-flow: column nowrap;
-  height: 100%;
-`;
-const StyledFooter = styled(Footer)`
-  position: relative;
-`;
-
-export const SessionPage = ({ children, ...props }: any) => (
-  <Main>
-    <SessionHeader />
-    <Page style={{ flexGrow: 1 }} {...props}>
-      {children}
-    </Page>
-    <StyledFooter fixed />
-  </Main>
-);
