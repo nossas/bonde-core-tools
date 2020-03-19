@@ -2,7 +2,6 @@ import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { FullPageLoading } from 'bonde-styleguide';
-import redirectToLogin from './redirectToLogin';
 
 const FETCH_USER = gql`
   query CurrentUser {
@@ -17,7 +16,7 @@ const FETCH_USER = gql`
   }
 `;
 
-export default ({ children }: any) => {
+export default ({ children, logout }: any) => {
   const { loading, error, data } = useQuery(FETCH_USER);
 
   if (loading)
@@ -25,7 +24,7 @@ export default ({ children }: any) => {
 
   if (error || !data.currentUser) {
     console.log('error', { error, data });
-    redirectToLogin();
+    logout();
   }
 
   return children({ user: data.currentUser });

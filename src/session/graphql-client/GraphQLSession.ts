@@ -1,6 +1,5 @@
 import { setContext } from 'apollo-link-context';
 import { handleErrorMiddleware } from './GraphQLHandleError';
-import redirectToLogin from '../redirectToLogin';
 
 export default (session: any = {}) => {
   const context = setContext((_, { headers }: any): any => {
@@ -19,7 +18,7 @@ export default (session: any = {}) => {
       networkError &&
       (networkError.statusCode === 401 || networkError.statusCode === 403)
     ) {
-      session.logout().then(redirectToLogin);
+      session.logout();
     }
   });
 

@@ -9,14 +9,26 @@ import { SessionProvider, useSession, SessionPage } from '../.';
 const history = createBrowserHistory()
 
 const UserInfo = () => {
-  const { user } = useSession()
+  const { community, user } = useSession()
 
-  return <p>Logged with {user.firstName}</p>
+  return (
+    <ul>
+      <li><b>User:</b> <span>{user.firstName}</span></li>
+      {!!community && (
+        <li><b>Community:</b> <span>{community.name}</span></li>
+      )}
+    </ul>
+}
+
+const config = {
+  loginUrl: 'http://admin-canary.bonde.devel:5002/auth/login',
+  crossStorageUrl: 'http://cross-storage.bonde.devel',
+  graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }
 
 const App = () => {
   return (
-    <SessionProvider baseLayout={SessionPage}>
+    <SessionProvider baseLayout={SessionPage} config={config}>
       <Router history={history}>
         <Route path="/" component={UserInfo} />
       </Router>

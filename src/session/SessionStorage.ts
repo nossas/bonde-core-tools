@@ -6,17 +6,9 @@ class SessionStorage {
   storage: any;
   authenticated: boolean = false;
 
-  constructor() {
+  constructor(uri: string) {
     // Init session client on cross-storage
-    const crossStorageUrl =
-      process.env.REACT_APP_DOMAIN_CROSS_STORAGE ||
-      'http://cross-storage.bonde.devel';
-
-    this.storage = new CrossStorageClient(crossStorageUrl, {
-      timeout: process.env.REACT_APP_CROSS_STORAGE_TIMEOUT
-        ? Number(process.env.REACT_APP_CROSS_STORAGE_TIMEOUT)
-        : 10000,
-    });
+    this.storage = new CrossStorageClient(uri, { timeout: 10000 });
   }
 
   logout() {

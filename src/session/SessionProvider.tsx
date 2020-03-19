@@ -5,8 +5,8 @@ import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
 import FetchCommunities from './FetchCommunities';
-import redirectToLogin from './redirectToLogin';
-import { Context } from './types';
+import nextURI from './nextURI';
+import { Context, Config } from './types';
 
 /**
  * Responsible to control session used on cross-storage
@@ -20,10 +20,12 @@ const SessionContext = createContext({
 interface SessionProviderProps {
   children: any;
   baseLayout: any;
+  config: Config;
 }
 
 export default function SessionProvider({
   children,
+  config,
   baseLayout: BaseLayout,
 }: SessionProviderProps) {
   const [defaultCommunity, setDefaultCommunity] = useState(undefined);
@@ -34,7 +36,7 @@ export default function SessionProvider({
     refetchCount: 0,
   });
 
-  const storage = new SessionStorage();
+  const storage = new SessionStorage(config.crossStorageUrl);
 
   const fetchSession = () => {
     storage
@@ -50,7 +52,7 @@ export default function SessionProvider({
       .catch((err: any) => {
         // TODO: change url admin-canary
         if (err && err.message === 'unauthorized') {
-          redirectToLogin();
+          window.location.href = nextURI(config.loginUrl);
           setSession({ ...session, signing: false });
         } else {
           // reload fetchSession when error not authorized
@@ -69,7 +71,9 @@ export default function SessionProvider({
   const logout = () =>
     storage
       .logout()
-      .then(() => redirectToLogin())
+      .then(() => {
+        window.location.href = nextURI(config.loginUrl);
+      })
       .catch((err: any) => console.log('err', err)); // TODO: Tratar erros
 
   const setCommunityOnStorage = (community: any) =>
@@ -86,9 +90,12 @@ export default function SessionProvider({
   return session.signing ? (
     <FullPageLoading bgColor="#fff" message="Carregando sessão..." />
   ) : (
-    <ApolloProvider client={createGraphQLClient(sessionProps)}>
+    <ApolloProvider
+      client={createGraphQLClient(config.graphqlApiUrl, sessionProps)}
+    >
       {/* Impplements provider with token recovered on cross-storage */}
-      <FetchUser>
+      {/* TODO: This logout should be reviewed. */}
+      <FetchUser logout={logout}>
         {/* Check token validate and recovery user infos */}
         {(user: any) => (
           <FetchCommunities

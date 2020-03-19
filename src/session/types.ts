@@ -25,3 +25,9 @@ export type Context = {
   logout: Function;
   onChangeCommunity: Function;
 };
+
+export type Config = {
+  loginUrl: string;
+  crossStorageUrl: string;
+  graphqlApiUrl: string;
+};
