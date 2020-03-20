@@ -23,6 +23,7 @@ export type SessionContext = {
   loading: any;
   community?: Community;
   onChange: Function;
+  login: Function;
   logout: Function;
 };
 

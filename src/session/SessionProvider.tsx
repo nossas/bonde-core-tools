@@ -75,6 +75,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
+  const login = (user: any) => storage.login(user);
+
   const logout = () =>
     storage
       .logout()
@@ -99,6 +101,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     token,
     community,
     onChange,
+    login,
     logout,
     isLogged: !!token,
     loading: Loading,
