@@ -1,45 +1,66 @@
 import React from 'react';
 import {
   Dropdown,
-  DropdownItem,
-  DropdownHeader,
-  Flexbox2 as Flexbox,
-  Icon,
-  Text,
-} from 'bonde-styleguide';
-import { User } from '../types';
+  DropdownIconItem,
+  DropdownImageItem,
+  Header,
+} from 'bonde-components';
+import { useSession } from '../SessionProvider';
+import { useUser } from '../UserProvider';
 
-interface UserDropdownProps {
-  user: User;
-  logout: any;
-}
-
-const UserDropdown = ({ user, logout }: UserDropdownProps) => {
+const UserDropdown = () => {
+  const { logout } = useSession();
+  const { user } = useUser();
   const name = `${user.firstName} ${user.lastName}`;
 
   return (
-    <Dropdown label={name}>
-      <DropdownHeader>
-        <img
-          src={user.avatar || 'http://via.placeholder.com/35x35?text=U'}
-          alt={name}
-          width="35"
-          height="35"
-        />
-        <Flexbox vertical>
-          <span>{name}</span>
-          <Text fontSize={13} color="rgb(160, 157, 157)">
-            {user.email}
-          </Text>
-        </Flexbox>
-      </DropdownHeader>
-      {/* 
-        // @ts-ignore */}
-      <DropdownItem onClick={logout}>
-        <Icon name="times" />
-        Sair
-      </DropdownItem>
-    </Dropdown>
+    <Dropdown
+      selectable={false}
+      direction="right"
+      placeholder={name}
+      items={[
+        {
+          clickable: false,
+          img: {
+            src: user.avatar || 'http://via.placeholder.com/35x35?text=U',
+            alt: name,
+          },
+          label: name,
+          email: user.email,
+          render: ({ value }: any) => {
+            const { img, label, email } = value;
+            return (
+              <DropdownImageItem
+                value={{
+                  img,
+                  label: (
+                    <div>
+                      <Header.h4>{label}</Header.h4>
+                      <Header.h5>{email}</Header.h5>
+                    </div>
+                  ),
+                }}
+              />
+            );
+          },
+        },
+        {
+          icon: 'User',
+          label: 'Perfil',
+          name: 'profile',
+        },
+        {
+          icon: 'Close',
+          label: 'Logout',
+          name: 'logout',
+        },
+      ]}
+      onSelect={({ name }: any) => {
+        if (name === 'logout') return logout();
+        if (name === 'profile') return 'asdasdasd';
+      }}
+      dropdownItem={DropdownIconItem}
+    />
   );
 };
 

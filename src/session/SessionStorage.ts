@@ -11,6 +11,14 @@ class SessionStorage {
     this.storage = new CrossStorageClient(uri, { timeout: 10000 });
   }
 
+  login(user: any) {
+    return this.storage.onConnect().then(() => {
+      this.authenticated = true;
+      this.token = user.token;
+      return this.storage.set('auth', JSON.stringify(user));
+    });
+  }
+
   logout() {
     return this.storage.onConnect().then(() => {
       return this.storage.del('auth', 'community').then(() => {
@@ -30,7 +38,7 @@ class SessionStorage {
         const communityJson = args[1];
         if (authJson) {
           const dataSession = {
-            token: JSON.parse(authJson).jwtToken,
+            token: JSON.parse(authJson).token,
             community: communityJson ? JSON.parse(communityJson) : {},
           };
           return Promise.resolve(dataSession);

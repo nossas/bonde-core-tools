@@ -4,64 +4,65 @@ import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
 import FetchCommunities from './FetchCommunities';
+import { SessionContext, Config } from './types';
 import nextURI from './nextURI';
-import { Context, Config } from './types';
 
 /**
  * Responsible to control session used on cross-storage
  **/
-
-const SessionContext = createContext({
+const Context = createContext({
   signing: true,
-  authenticated: false,
-} as Context);
+  isLogged: false,
+} as SessionContext);
 
 interface LoadingProps {
-  fetching: 'session' | 'user' | 'communities';
+  fetching: 'session';
 }
 
 interface SessionProviderProps {
   children: any;
   loading: React.FC<LoadingProps>;
+  fetchData: boolean;
   config: Config;
 }
 
 const SessionProvider: React.FC<SessionProviderProps> = ({
   children,
   loading: Loading,
+  fetchData,
   config,
 }) => {
-  const [defaultCommunity, setDefaultCommunity] = useState(undefined);
   const [token, setToken] = useState(undefined);
-  const [session, setSession] = useState({
-    signing: true,
-    authenticated: false,
-    refetchCount: 0,
-  });
+  const [signing, setSigning] = useState(true);
+  const [refetch, setRefetch] = useState(0);
+  const [community, setCommunity] = useState(undefined);
 
   const storage = new SessionStorage(config.crossStorageUrl);
 
   const fetchSession = () => {
     storage
       .getAsyncSession()
-      .then(({ token, community }: any = {}) => {
-        if (!token) throw Error('unauthorized');
+      .then(({ token: stoken, community: scommunity }: any = {}) => {
+        if (!stoken) throw Error('unauthorized');
 
-        setSession({ ...session, signing: false, authenticated: true });
-        setToken(token);
-        setDefaultCommunity(community);
+        setToken(stoken);
+        setSigning(false);
+        setCommunity(
+          !!Object.keys(scommunity || {}).length ? scommunity : undefined
+        );
         return Promise.resolve();
       })
       .catch((err: any) => {
         // TODO: change url admin-canary
         if (err && err.message === 'unauthorized') {
           window.location.href = nextURI(config.loginUrl);
-          setSession({ ...session, signing: false });
+          setToken(undefined);
+          setSigning(false);
         } else {
           // reload fetchSession when error not authorized
           console.log('err', err.message);
-          setSession({ ...session, refetchCount: session.refetchCount++ });
-          if (session.refetchCount < 3) fetchSession();
+          setRefetch(refetch + 1);
+          if (refetch < 3) fetchSession();
         }
       });
   };
@@ -77,65 +78,54 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       .then(() => {
         window.location.href = nextURI(config.loginUrl);
       })
-      .catch((err: any) => console.log('err', err)); // TODO: Tratar erros
+      .catch((err: any) => console.log('err', err)); // TODO: Tratar erros */
 
-  const setCommunityOnStorage = (community: any) =>
-    storage.setAsyncItem('community', community);
-
-  const sessionProps = {
-    authenticated: session.authenticated,
-    signing: session.signing,
-    defaultCommunity,
-    token,
-    logout,
+  const onChange = ({ community }: any) => {
+    if (!!community) {
+      storage.setAsyncItem('community', community);
+      setCommunity(community);
+    }
   };
 
-  return session.signing ? (
+  const session = {
+    signing,
+    token,
+    community,
+    onChange,
+    logout,
+    isLogged: !!token,
+    loading: Loading,
+  };
+
+  return signing ? (
     <Loading fetching="session" />
   ) : (
-    <ApolloProvider
-      client={createGraphQLClient(config.graphqlApiUrl, sessionProps)}
-    >
-      {/* Impplements provider with token recovered on cross-storage */}
-      {/* TODO: This logout should be reviewed. */}
-      <FetchUser loading={Loading} logout={logout}>
-        {/* Check token validate and recovery user infos */}
-        {(user: any) => (
-          <FetchCommunities
-            loading={Loading}
-            variables={{ userId: user.user.id }}
-            defaultCommunity={defaultCommunity}
-            onChange={setCommunityOnStorage}
-          >
-            {(communities: any) => (
-              <SessionContext.Provider
-                value={{ ...sessionProps, ...user, ...communities }}
-              >
-                {children}
-              </SessionContext.Provider>
-            )}
-          </FetchCommunities>
-        )}
-      </FetchUser>
+    <ApolloProvider client={createGraphQLClient(config.graphqlApiUrl, session)}>
+      {fetchData && session.isLogged ? (
+        <FetchUser loading={Loading} logout={logout}>
+          {/* Check token validate and recovery user infos */}
+          {(user: any) => (
+            <FetchCommunities
+              loading={Loading}
+              variables={{ userId: user.user.id }}
+            >
+              {(communities: any) => (
+                <Context.Provider value={{ ...user, ...communities }}>
+                  {children}
+                </Context.Provider>
+              )}
+            </FetchCommunities>
+          )}
+        </FetchUser>
+      ) : fetchData && !session.isLogged ? (
+        <h3>Redirecionar para Módulo de Autenticação</h3>
+      ) : (
+        <Context.Provider value={session}>{children}</Context.Provider>
+      )}
     </ApolloProvider>
   );
 };
 
-export const useSession = () => {
-  return useContext(SessionContext);
-};
-
-export const SessionHOC = (WrappedComponent: any, opts?: any) =>
-  class extends React.Component {
-    static contextType = SessionContext;
-
-    render() {
-      return opts && opts.required && !this.context.community ? (
-        <div>Você deve selecionar uma comunidade</div>
-      ) : (
-        <WrappedComponent {...this.props} session={this.context} />
-      );
-    }
-  };
+export const useSession = () => useContext(Context);
 
 export default SessionProvider;

@@ -16,18 +16,24 @@ export type Community = {
   updated_at: string;
 };
 
-export type Context = {
+export type SessionContext = {
   signing: boolean;
-  authenticated: boolean;
+  isLogged: boolean;
+  token?: string;
+  loading: any;
   community?: Community;
+  onChange: Function;
+  logout: Function;
+};
+
+export type UserContext = {
   communities: Community[];
   user: User;
-  logout: Function;
-  onChangeCommunity: Function;
 };
 
 export type Config = {
   loginUrl: string;
+  profileUrl: string;
   crossStorageUrl: string;
   graphqlApiUrl: string;
 };

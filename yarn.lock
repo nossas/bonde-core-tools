@@ -1915,10 +1915,10 @@ bluebird@3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-bonde-components@0.0.2-alpha.1:
-  version "0.0.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/bonde-components/-/bonde-components-0.0.2-alpha.1.tgz#bda64152aab8da15e23c4e787e56f1bd62b6fa38"
-  integrity sha512-AESrL51JBynGFN08Bo1vm/BjQZsL/eBdZ+EuPtx2OANHdq92we1NDArpijrRhplbos5v6/DyTeB9XuDT/hpNZg==
+bonde-components@0.0.2-alpha.2:
+  version "0.0.2-alpha.2"
+  resolved "https://registry.yarnpkg.com/bonde-components/-/bonde-components-0.0.2-alpha.2.tgz#810e6c2a411cf657431534b0a9f365dac731b5ea"
+  integrity sha512-wUkjOaH7QU1524g7L+8W5gJV1qrwMEj5jtZHl7ntNtpsQDtGgAWG6t/yCulOCwiDIFIOXk1kg/hJeonDlCPW9g==
   dependencies:
     styled-components "^5.0.1"
 

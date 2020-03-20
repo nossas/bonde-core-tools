@@ -1,6 +1,7 @@
 import React from 'react';
-import CommunitiesDropdown from './CommunitiesDropdown';
 import { Main, Footer, Navbar, Body } from 'bonde-components';
+import CommunitiesDropdown from './CommunitiesDropdown';
+import UserDropdown from './UserDropdown';
 
 interface BondeSessionUIProps {
   indexRoute: string;
@@ -14,6 +15,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
     <Main>
       <Navbar indexRoute={indexRoute} brand="small">
         <CommunitiesDropdown />
+        <UserDropdown />
       </Navbar>
       {children}
       <Footer />

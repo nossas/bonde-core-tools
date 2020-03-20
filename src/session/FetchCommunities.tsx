@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 
@@ -15,14 +15,7 @@ const FETCH_RELATED_COMMUNITIES = gql`
   }
 `;
 
-export default ({
-  children,
-  variables,
-  defaultCommunity,
-  onChange,
-  loading: Loading,
-}: any) => {
-  const [community, setCommunity] = useState(defaultCommunity);
+export default ({ children, variables, loading: Loading }: any) => {
   const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES, {
     variables,
   });
@@ -34,13 +27,5 @@ export default ({
     return children({ communities: [] });
   }
 
-  const fetchCommunitiesProps = {
-    communities: data.communities,
-    community: Object.keys(community).length > 0 ? community : undefined,
-    onChangeCommunity: (c: any) => {
-      return onChange(c).then(() => setCommunity(c));
-    },
-  };
-
-  return children(fetchCommunitiesProps);
+  return children({ communities: data.communities });
 };

@@ -5,6 +5,7 @@ import {
   DropdownImageItem,
 } from 'bonde-components';
 import { useSession } from '../SessionProvider';
+import { useUser } from '../UserProvider';
 
 const toItem = (c: any) =>
   !!c
@@ -16,7 +17,8 @@ const toItem = (c: any) =>
     : undefined;
 
 const CommunitiesDropdown = () => {
-  const { community, communities, onChangeCommunity } = useSession();
+  const { community, onChange } = useSession();
+  const { communities } = useUser();
 
   return (
     <Dropdown
@@ -24,7 +26,9 @@ const CommunitiesDropdown = () => {
       item={toItem(community)}
       items={communities.map(toItem)}
       onSelect={(value: any) => {
-        onChangeCommunity(communities.find(c => c.id === value.id));
+        onChange({
+          community: communities.find((c: any) => c.id === value.id),
+        });
       }}
       dropdownInput={DropdownImageInput}
       dropdownItem={DropdownImageItem}
