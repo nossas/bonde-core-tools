@@ -5,7 +5,6 @@ import {
   DropdownImageItem,
 } from 'bonde-components';
 import { useSession } from '../SessionProvider';
-import { useUser } from '../UserProvider';
 
 const toItem = (c: any) =>
   !!c
@@ -17,8 +16,7 @@ const toItem = (c: any) =>
     : undefined;
 
 const CommunitiesDropdown = () => {
-  const { community, onChange } = useSession();
-  const { communities } = useUser();
+  const { community, communities, onChange } = useSession();
 
   return (
     <Dropdown

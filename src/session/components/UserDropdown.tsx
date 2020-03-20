@@ -6,11 +6,9 @@ import {
   Header,
 } from 'bonde-components';
 import { useSession } from '../SessionProvider';
-import { useUser } from '../UserProvider';
 
 const UserDropdown = () => {
-  const { logout } = useSession();
-  const { user } = useUser();
+  const { user, logout } = useSession();
   const name = `${user.firstName} ${user.lastName}`;
 
   return (

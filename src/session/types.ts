@@ -21,7 +21,9 @@ export type SessionContext = {
   isLogged: boolean;
   token?: string;
   loading: any;
+  user: User;
   community?: Community;
+  communities: Community[];
   onChange: Function;
   login: Function;
   logout: Function;

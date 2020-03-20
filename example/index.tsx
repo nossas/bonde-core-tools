@@ -25,8 +25,8 @@ const TextLoading = ({ fetching }) => {
 }
 
 const ModulePublic = () => {
-  const { community } = useSession()
-  const { user } = useUser()
+  const { user, community } = useSession()
+
   return (
     <div>
       <Header.h3>Welcome {user.firstName}!</Header.h3>
@@ -43,8 +43,8 @@ const config = {
 
 const App = () => {
   return (
-    <BondeSessionProvider loading={TextLoading} config={config} fechData>
-      <BondeSessionUI.Main>
+    <BondeSessionProvider loading={TextLoading} config={config} fetchData>
+      <BondeSessionUI.Main indexRoute='/'>
         <BondeSessionUI.Content>
           <ModulePublic />
         </BondeSessionUI.Content>

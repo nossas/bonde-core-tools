@@ -13,7 +13,7 @@ import nextURI from './nextURI';
 const Context = createContext({
   signing: true,
   isLogged: false,
-} as SessionContext);
+});
 
 interface LoadingProps {
   fetching: 'session';
@@ -120,7 +120,9 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
               variables={{ userId: user.user.id }}
             >
               {(communities: any) => (
-                <Context.Provider value={{ ...user, ...communities }}>
+                <Context.Provider
+                  value={{ ...session, ...user, ...communities }}
+                >
                   {children}
                 </Context.Provider>
               )}
@@ -136,6 +138,11 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   );
 };
 
-export const useSession = () => useContext(Context);
+SessionProvider.defaultProps = {
+  fetchData: false,
+};
+
+export const useSession = (): SessionContext =>
+  useContext(Context) as SessionContext;
 
 export default SessionProvider;
