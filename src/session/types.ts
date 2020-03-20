@@ -32,8 +32,7 @@ export type UserContext = {
 };
 
 export type Config = {
-  loginUrl: string;
-  profileUrl: string;
+  loginUrl?: string;
   crossStorageUrl: string;
   graphqlApiUrl: string;
 };

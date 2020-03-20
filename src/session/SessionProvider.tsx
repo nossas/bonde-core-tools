@@ -55,7 +55,10 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       .catch((err: any) => {
         // TODO: change url admin-canary
         if (err && err.message === 'unauthorized') {
-          window.location.href = nextURI(config.loginUrl);
+          if (!!config.loginUrl) {
+            window.location.href = nextURI(config.loginUrl);
+          }
+
           setToken(undefined);
           setSigning(false);
         } else {
@@ -76,7 +79,11 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     storage
       .logout()
       .then(() => {
-        window.location.href = nextURI(config.loginUrl);
+        if (config.loginUrl) {
+          window.location.href = nextURI(config.loginUrl);
+        }
+
+        return Promise.resolve();
       })
       .catch((err: any) => console.log('err', err)); // TODO: Tratar erros */
 
