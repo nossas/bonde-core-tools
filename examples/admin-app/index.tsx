@@ -5,12 +5,7 @@ import { Redirect, Route, Switch } from "react-router";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import { Loading, Header, Text } from 'bonde-components';
-import {
-  BondeSessionProvider,
-  BondeSessionUI,
-  useUser,
-  useSession
-} from '../.';
+import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
 // import LoginForm from './LoginForm'
 
 const history = createBrowserHistory();
@@ -36,7 +31,7 @@ const ModulePublic = () => {
 }
 
 const config = {
-  loginUrl: 'http://app.bonde.devel:5000/auth/login',
+  loginUrl: 'http://app.bonde.devel:8282/auth/login',
   crossStorageUrl: 'http://cross-storage.bonde.devel',
   graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }

@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Header, Main, Body, Button } from 'bonde-components'
-import gql from 'graphql-tag'
-import { Redirect } from "react-router";
-import { useMutation, useSession } from '../.'
+import * as React from 'react';
+import { Header, Main, Body, Button } from 'bonde-components';
+import gql from 'graphql-tag';
+import { useLocation } from "react-router-dom";
+import { useMutation, useSession } from '../../.';
 
 const LoginMutation = gql`
   mutation authenticate($email: String!, $password: String!){
@@ -22,10 +22,16 @@ const LoginForm = () => {
   let email, password
   const [authenticate, { data }] = useMutation(LoginMutation)
   const { login } = useSession()
+  const { search } = useLocation()
 
   if (!!data) {
     login(data.authenticate)
-    return <Redirect to='/admin' />
+      .then(() => {
+        const urlParams = new URLSearchParams(search)
+        const nextUrl = urlParams.get('next')
+        // URL default
+        window.location.href = nextUrl ? nextUrl : 'http://app.bonde.devel:8181';
+      })
   }
 
   return (
