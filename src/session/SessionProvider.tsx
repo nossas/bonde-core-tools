@@ -22,7 +22,7 @@ interface LoadingProps {
 interface SessionProviderProps {
   children: any;
   loading: React.FC<LoadingProps>;
-  fetchData: boolean;
+  fetchData?: boolean;
   config: Config;
 }
 
