@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html --port 8282",
+    "start": "parcel index.html --port 5000",
     "build": "parcel build index.html"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "bonde-core-tools": "0.0.9",
     "graphql-tag": "^2.10.3",
     "react-app-polyfill": "^1.0.0",
+    "react-final-form": "^6.3.5",
     "react-router-dom": "^5.1.2"
   },
   "alias": {

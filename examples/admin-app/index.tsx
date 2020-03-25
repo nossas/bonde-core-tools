@@ -31,7 +31,7 @@ const ModulePublic = () => {
 }
 
 const config = {
-  loginUrl: 'http://app.bonde.devel:8282/auth/login',
+  loginUrl: 'http://auth.bonde.devel:5000/auth/login',
   crossStorageUrl: 'http://cross-storage.bonde.devel',
   graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }
