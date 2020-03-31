@@ -7,6 +7,7 @@ import { createBrowserHistory } from 'history';
 import { Loading, Header, Text } from 'bonde-components';
 import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
 // import LoginForm from './LoginForm'
+import modules from './config';
 
 const history = createBrowserHistory();
 
@@ -14,7 +15,8 @@ const TextLoading = ({ fetching }) => {
   const messages = {
     session: 'Carregando sessão...',
     user: 'Carregando usuário...',
-    communities: 'Carregando communities...'
+    communities: 'Carregando communities...',
+    redirect: 'Redirecionando para login...'
   }
   return <Loading fullsize message={messages[fetching]} />
 }
@@ -31,7 +33,7 @@ const ModulePublic = () => {
 }
 
 const config = {
-  loginUrl: 'http://auth.bonde.devel:5000/auth/login',
+  modules,
   crossStorageUrl: 'http://cross-storage.bonde.devel',
   graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }

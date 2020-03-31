@@ -16,12 +16,13 @@ const Context = createContext({
 });
 
 interface LoadingProps {
-  fetching: 'session';
+  fetching: 'session' | 'redirect';
 }
 
 interface SessionProviderProps {
   children: any;
   loading: React.FC<LoadingProps>;
+  // For props fetchData true, userInfo and communities are fetched. Default: false
   fetchData?: boolean;
   config: Config;
 }
@@ -55,8 +56,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       .catch((err: any) => {
         // TODO: change url admin-canary
         if (err && err.message === 'unauthorized') {
-          if (!!config.loginUrl) {
-            window.location.href = nextURI(config.loginUrl);
+          if (config.modules && config.modules.accounts) {
+            window.location.href = nextURI(config.modules.accounts);
           }
 
           setToken(undefined);
@@ -81,8 +82,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     storage
       .logout()
       .then(() => {
-        if (config.loginUrl) {
-          window.location.href = nextURI(config.loginUrl);
+        if (config.modules && config.modules.accounts) {
+          window.location.href = config.modules.accounts;
         }
 
         return Promise.resolve();
@@ -103,6 +104,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     onChange,
     login,
     logout,
+    modulesConfig: config.modules,
     isLogged: !!token,
     loading: Loading,
   };
@@ -130,7 +132,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
           )}
         </FetchUser>
       ) : fetchData && !session.isLogged ? (
-        <h3>Redirecionar para Módulo de Autenticação</h3>
+        <Loading fetching="redirect" />
       ) : (
         <Context.Provider value={session}>{children}</Context.Provider>
       )}

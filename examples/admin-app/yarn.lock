@@ -1319,10 +1319,10 @@ bonde-components@0.0.2-alpha.2:
   dependencies:
     styled-components "^5.0.1"
 
-bonde-core-tools@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/bonde-core-tools/-/bonde-core-tools-0.0.9.tgz#bc69c4ca769e1ba82584797dc83b1ecc560656b1"
-  integrity sha512-bE92nMZ6SM6nKSKGahEFHjXwloVx4ODi/t4SxDpW0PYFEvKjiDb4/cq7mIBWREjhCi8wzudk/pWTS4EXk0sWxA==
+bonde-core-tools@0.1.2-alpha.0:
+  version "0.1.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/bonde-core-tools/-/bonde-core-tools-0.1.2-alpha.0.tgz#38a6927216258ae07763bad239454b13db238d3c"
+  integrity sha512-zq+2t5E3YG1dfe8/9d0dBXXN8h38Fpe4e/HB7dNoOFNRUb1QDfnPZSC8DcMKhUoRMCU+uVVskq12UJ6RGbkaJA==
   dependencies:
     "@apollo/react-hooks" "^3.1.3"
     "@types/react-router-dom" "^5.1.3"

@@ -4,7 +4,14 @@ import {
   DropdownImageInput,
   DropdownImageItem,
 } from 'bonde-components';
+import styled from 'styled-components';
 import { useSession } from '../SessionProvider';
+import CommunityMenu from './CommunityMenu';
+
+const WithMenu = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const toItem = (c: any) =>
   !!c
@@ -19,18 +26,21 @@ const CommunitiesDropdown = () => {
   const { community, communities, onChange } = useSession();
 
   return (
-    <Dropdown
-      placeholder="Selecione uma comunidade"
-      item={toItem(community)}
-      items={communities.map(toItem)}
-      onSelect={(value: any) => {
-        onChange({
-          community: communities.find((c: any) => c.id === value.id),
-        });
-      }}
-      dropdownInput={DropdownImageInput}
-      dropdownItem={DropdownImageItem}
-    />
+    <WithMenu>
+      <Dropdown
+        placeholder="Selecione uma comunidade"
+        item={toItem(community)}
+        items={communities.map(toItem)}
+        onSelect={(value: any) => {
+          onChange({
+            community: communities.find((c: any) => c.id === value.id),
+          });
+        }}
+        dropdownInput={DropdownImageInput}
+        dropdownItem={DropdownImageItem}
+      />
+      {community && <CommunityMenu community={community} inverted />}
+    </WithMenu>
   );
 };
 
