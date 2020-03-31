@@ -7,16 +7,17 @@ export type Module =
   | 'redes'
   | 'accounts';
 
-export interface ModuleConfig {
-  [module: Module]: string;
-}
+// export interface ModuleConfig {
+//   [module: Module]: string;
+// }
 
-export interface Config extends ModuleConfig {
+export interface Config {
   crossStorage: string;
   apiGraphql: string;
-  // settings: string;
-  // mobilization: string;
-  // chatbot: string;
-  // redes: string;
-  // accounts: string;
+  settings: string;
+  mobilization: string;
+  chatbot: string;
+  redes: string;
+  accounts: string;
+  [index: string]: string;
 }

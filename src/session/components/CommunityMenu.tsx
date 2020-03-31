@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Icon } from 'bonde-components';
+// import { Module } from '../../settings/types';
 import { useSession } from '../SessionProvider';
 import { Community } from '../types';
 
@@ -68,11 +69,12 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
     await onChange({ community });
     window.location.href = url;
   };
+
   return config ? (
     <MenuStyled>
       {Object.keys(modules)
         .filter((key: string) => !!modules[key])
-        .map((key: string) => (
+        .map((key: any) => (
           <MenuItem
             inverted={inverted}
             key={key}
