@@ -70,7 +70,7 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
     window.location.href = url;
   };
 
-  return config ? (
+  return (
     <MenuStyled>
       {Object.keys(modules)
         .filter((key: string) => !!modules[key])
@@ -84,7 +84,7 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
           />
         ))}
     </MenuStyled>
-  ) : null;
+  );
 };
 
 CommunityMenu.defaultProps = {

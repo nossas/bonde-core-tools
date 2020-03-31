@@ -13,8 +13,8 @@ export default {
   staging: {
     // Modules URLs
     accounts: 'https://accounts.staging.bonde.org/login',
-    mobilization: 'https://app.staging.bonde.org',
-    settings: 'https://admin-canary.staging.bonde.org',
+    mobilization: 'https://app.staging.bonde.org/mobilizations',
+    settings: 'https://admin-canary.staging.bonde.org/community/settings',
     chatbot: 'https://chatbot.staging.bonde.org',
     redes: 'https://redes.staging.bonde.org',
     // Essentials URLs
@@ -24,8 +24,8 @@ export default {
   production: {
     // Modules URLs
     accounts: 'https://accounts.bonde.org/login',
-    mobilization: 'https://app.bonde.org',
-    settings: 'https://admin-canary.bonde.org',
+    mobilization: 'https://app.bonde.org/mobilizations',
+    settings: 'https://admin-canary.bonde.org/community/settings',
     chatbot: 'https://chatbot.bonde.org',
     redes: 'https://redes.bonde.org',
     // Essentials URLs
