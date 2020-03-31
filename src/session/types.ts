@@ -1,3 +1,5 @@
+import { Config } from '../settings/types';
+
 export type User = {
   id: number;
   firstName: string;
@@ -26,10 +28,6 @@ export type Community = {
   recipient?: any;
 };
 
-export type Modules = {
-  [module: string]: string;
-};
-
 export type SessionContext = {
   signing: boolean;
   isLogged: boolean;
@@ -38,7 +36,7 @@ export type SessionContext = {
   user: User;
   community?: Community;
   communities: Community[];
-  modulesConfig?: Modules;
+  config: Config;
   onChange: Function;
   login: Function;
   logout: Function;
@@ -47,10 +45,4 @@ export type SessionContext = {
 export type UserContext = {
   communities: Community[];
   user: User;
-};
-
-export type Config = {
-  modules: Modules;
-  crossStorageUrl: string;
-  graphqlApiUrl: string;
 };

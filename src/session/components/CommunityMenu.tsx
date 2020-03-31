@@ -61,14 +61,14 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
   community,
   inverted,
 }) => {
-  const { onChange, modulesConfig } = useSession();
+  const { onChange, config } = useSession();
   const { modules } = community;
 
   const click = (url: string) => async () => {
     await onChange({ community });
     window.location.href = url;
   };
-  return modulesConfig ? (
+  return config ? (
     <MenuStyled>
       {Object.keys(modules)
         .filter((key: string) => !!modules[key])
@@ -78,7 +78,7 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
             key={key}
             icon={items[key][0]}
             title={items[key][1]}
-            onClick={click(modulesConfig[key])}
+            onClick={click(config[key])}
           />
         ))}
     </MenuStyled>

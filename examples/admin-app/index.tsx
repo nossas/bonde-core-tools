@@ -6,7 +6,6 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import { Loading, Header, Text } from 'bonde-components';
 import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
-// import LoginForm from './LoginForm'
 import modules from './config';
 
 const history = createBrowserHistory();
@@ -32,39 +31,22 @@ const ModulePublic = () => {
   )
 }
 
-const config = {
-  modules,
-  crossStorageUrl: 'http://cross-storage.bonde.devel',
-  graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
+const extraConfig = {
+  apiGraphql: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }
 
 const App = () => {
   return (
-    <BondeSessionProvider loading={TextLoading} config={config} fetchData>
+    <BondeSessionProvider
+      fetchData
+      extraConfig={extraConfig}
+      loading={TextLoading}
+    >
       <BondeSessionUI.Main indexRoute='/'>
         <BondeSessionUI.Content>
           <ModulePublic />
         </BondeSessionUI.Content>
       </BondeSessionUI.Main>
-      {/* <Router history={history}>
-        <IsLogged path='/'>
-          <BondeSessionUI.Main indexRoute='/admin'>
-            <BondeSessionUI.Content>
-              <Redirect to='/admin' />
-              <Route exact path='/admin' component={UserInfo} />
-              <Route exact path='/admin/profile'>
-                <Header.h2>Profile</Header.h2>
-              </Route>
-            </BondeSessionUI.Content>
-          </BondeSessionUI.Main>
-        </IsLogged>
-        <NotAuthenticated path='/'>
-          <Redirect to='/auth/login' />
-        </NotAuthenticated>
-        <Route exact path='/login'>
-          <LoginForm />
-        </Route>
-      </Router> */}
     </BondeSessionProvider>
   );
 };
