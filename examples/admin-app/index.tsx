@@ -4,9 +4,9 @@ import * as ReactDOM from 'react-dom';
 import { Redirect, Route, Switch } from "react-router";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
-import { Loading, Header, Text } from 'bonde-components';
+import { Loading } from 'bonde-components';
 import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
-import modules from './config';
+import HomePage from './HomePage';
 
 const history = createBrowserHistory();
 
@@ -18,17 +18,6 @@ const TextLoading = ({ fetching }) => {
     redirect: 'Redirecionando para login...'
   }
   return <Loading fullsize message={messages[fetching]} />
-}
-
-const ModulePublic = () => {
-  const { user, community } = useSession()
-
-  return (
-    <div>
-      <Header.h3>Welcome {user.firstName}!</Header.h3>
-      {!!community && <Text>{community.name}</Text>}
-    </div>
-  )
 }
 
 const extraConfig = {
@@ -44,7 +33,7 @@ const App = () => {
     >
       <BondeSessionUI.Main indexRoute='/'>
         <BondeSessionUI.Content>
-          <ModulePublic />
+          <HomePage />
         </BondeSessionUI.Content>
       </BondeSessionUI.Main>
     </BondeSessionProvider>

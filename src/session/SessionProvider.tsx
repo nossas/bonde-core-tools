@@ -45,7 +45,6 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
 
   // 1. Merge settings to start BondeSessionProvider requests
   const config = Object.assign({}, settings(environment), extraConfig);
-  console.log('config', config);
 
   // 2. Create a SessionStorage client connect on cross-storage
   const storage = new SessionStorage(config.crossStorage);
