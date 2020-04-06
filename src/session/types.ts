@@ -29,6 +29,7 @@ export type Community = {
 };
 
 export type SessionContext = {
+  storage: any;
   signing: boolean;
   isLogged: boolean;
   token?: string;

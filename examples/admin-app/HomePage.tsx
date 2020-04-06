@@ -51,26 +51,42 @@ const Image = styled.img`
 `
 
 const HomePage = () => {
-  const { user, communities } = useSession()
+  const { user, communities, storage } = useSession()
   return (
-    <Styles>
-      <ul>
-        {communities.map((c: any, index: number) => (
-          <li key={index}>
-            <Colunm>
-              <Image src={c.image || 'https://via.placeholder.com/100'} alt={c.name} />
-            </Colunm>
-            <Colunm grow={1}>
-              <Header.h4>{c.name}</Header.h4>
-              <Header.h5>{c.city}</Header.h5>
-            </Colunm>
-            <Colunm>
-              <CommunityMenu community={c} />
-            </Colunm>
-          </li>
-        ))}
-      </ul>
-    </Styles>
+    <>
+      <Styles>
+        <ul>
+          {communities.map((c: any, index: number) => (
+            <li key={index}>
+              <Colunm>
+                <Image src={c.image || 'https://via.placeholder.com/100'} alt={c.name} />
+              </Colunm>
+              <Colunm grow={1}>
+                <Header.h4>{c.name}</Header.h4>
+                <Header.h5>{c.city}</Header.h5>
+              </Colunm>
+              <Colunm>
+                <CommunityMenu community={c} />
+              </Colunm>
+              <Colunm>
+                <button
+                  type='button'
+                  onClick={() => {
+                    storage
+                      .setAsyncItem('community', c)
+                      .then(() => {
+                        console.log('redirect com community on session')
+                      })
+                  }}
+                >
+                  Alterar comunidade na sessão
+                </button>
+              </Colunm>
+            </li>
+          ))}
+        </ul>
+      </Styles>
+    </>
   )
 }
 

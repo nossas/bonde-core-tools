@@ -108,6 +108,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   };
 
   const session = {
+    storage,
     signing,
     token,
     community,
