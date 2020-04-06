@@ -5,7 +5,11 @@ import { Button, Icon } from 'bonde-components';
 import { useSession } from '../SessionProvider';
 import { Community } from '../types';
 
-const MenuStyled = styled.div`
+interface MenuStyledProps {
+  inverted?: boolean;
+}
+
+const MenuStyled = styled.div<MenuStyledProps>`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -13,6 +17,25 @@ const MenuStyled = styled.div`
   button {
     border: none;
     padding: 0;
+
+    ${props =>
+      props.inverted &&
+      `
+      &.active {
+        ${Icon} {
+          &.stroke {
+            path {
+              stroke: #ee0099;
+            }
+          }
+          &.fill {
+            path {
+              fill: #ee0099;
+            }
+          }
+        }
+      }
+    `}
   }
 
   ${Icon} {
@@ -20,7 +43,12 @@ const MenuStyled = styled.div`
   }
 `;
 
+MenuStyled.defaultProps = {
+  inverted: false,
+};
+
 interface MenuItemProps {
+  active?: boolean;
   icon: any;
   title: string;
   onClick: Function;
@@ -32,14 +60,22 @@ const MenuItem: React.FC<MenuItemProps> = ({
   title,
   onClick,
   inverted,
+  active,
 }) => (
-  <Button dark={!inverted} light={inverted} onClick={onClick} title={title}>
+  <Button
+    className={active ? 'active' : null}
+    dark={!inverted}
+    light={inverted}
+    onClick={onClick}
+    title={title}
+  >
     <Icon name={icon} size="small" />
   </Button>
 );
 
 MenuItem.defaultProps = {
   inverted: false,
+  active: false,
 };
 
 interface ItemsConfig {
@@ -71,18 +107,24 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
   };
 
   return (
-    <MenuStyled>
+    <MenuStyled inverted={inverted}>
       {Object.keys(modules)
         .filter((key: string) => !!modules[key])
-        .map((key: any) => (
-          <MenuItem
-            inverted={inverted}
-            key={key}
-            icon={items[key][0]}
-            title={items[key][1]}
-            onClick={click(config[key])}
-          />
-        ))}
+        .map((key: any) => {
+          const moduleHost: string = new URL('', config[key]).host;
+          const baseHost: string = new URL('', window.location.href).host;
+
+          return (
+            <MenuItem
+              active={moduleHost === baseHost}
+              inverted={inverted}
+              key={key}
+              icon={items[key][0]}
+              title={items[key][1]}
+              onClick={click(config[key])}
+            />
+          );
+        })}
     </MenuStyled>
   );
 };

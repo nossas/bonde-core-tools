@@ -21,6 +21,7 @@ const TextLoading = ({ fetching }) => {
 }
 
 const extraConfig = {
+  settings: 'http://admin-canary.bonde.devel:5001/settings',
   apiGraphql: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }
 
