@@ -102,8 +102,7 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
   const { modules } = community;
 
   const click = (url: string) => async () => {
-    await onChange({ community });
-    window.location.href = url;
+    await onChange({ community, url });
   };
 
   return (

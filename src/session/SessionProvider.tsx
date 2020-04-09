@@ -18,7 +18,7 @@ const Context = createContext({
 });
 
 interface LoadingProps {
-  fetching: 'session' | 'redirect';
+  fetching: 'session' | 'redirect' | 'module';
 }
 
 interface SessionProviderProps {
@@ -38,6 +38,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   loading: Loading,
 }) => {
   // 0. Start controller states
+  const [redirecting, setRedirecting] = useState(false);
   const [token, setToken] = useState(undefined);
   const [signing, setSigning] = useState(true);
   const [refetch, setRefetch] = useState(0);
@@ -100,10 +101,14 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       })
       .catch((err: any) => console.log('err', err)); // TODO: Tratar erros */
 
-  const onChange = ({ community }: any) => {
+  const onChange = ({ community, url }: any) => {
     if (!!community) {
       storage.setAsyncItem('community', community);
       setCommunity(community);
+    }
+    if (!!url) {
+      window.location.href = url;
+      setRedirecting(true);
     }
   };
 
@@ -122,6 +127,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
 
   return signing ? (
     <Loading fetching="session" />
+  ) : redirecting ? (
+    <Loading fetching="module" />
   ) : (
     <ApolloProvider client={createGraphQLClient(config.apiGraphql, session)}>
       {fetchData && session.isLogged ? (

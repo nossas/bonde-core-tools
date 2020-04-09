@@ -15,7 +15,8 @@ const TextLoading = ({ fetching }) => {
     session: 'Carregando sessão...',
     user: 'Carregando usuário...',
     communities: 'Carregando communities...',
-    redirect: 'Redirecionando para login...'
+    redirect: 'Redirecionando para login...',
+    module: 'Redirecionando para módulo...'
   }
   return <Loading fullsize message={messages[fetching]} />
 }
