@@ -42,11 +42,11 @@ const UserDropdown = () => {
             );
           },
         },
-        {
-          icon: 'User',
-          label: 'Perfil',
-          name: 'profile',
-        },
+        // {
+        //   icon: 'User',
+        //   label: 'Perfil',
+        //   name: 'profile',
+        // },
         {
           icon: 'Close',
           label: 'Logout',

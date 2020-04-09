@@ -36,7 +36,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
         {disableNavigation ? <div /> : <CommunitiesDropdown />}
         <UserDropdown />
       </Navbar>
-      <Content bgColor={bgColor || '#c7c7c7'}>{children}</Content>
+      <Content bgColor={bgColor || 'rgb(247,247,247)'}>{children}</Content>
       <Footer />
     </Main>
   );

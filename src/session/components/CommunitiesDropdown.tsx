@@ -11,12 +11,27 @@ import CommunityMenu from './CommunityMenu';
 const WithMenu = styled.div`
   display: flex;
   flex-direction: row;
+
+  ${DropdownImageItem} {
+    img {
+      border-radius: 30px;
+    }
+
+    &:hover {
+      background-color: rgb(247, 247, 247);
+    }
+  }
 `;
 
 const toItem = (c: any) =>
   !!c
     ? {
-        img: { src: c.image || 'https://via.placeholder.com/100', alt: c.name },
+        img: {
+          src:
+            c.image ||
+            `https://via.placeholder.com/100?text=${c.name.substring(0, 1)}`,
+          alt: c.name,
+        },
         label: c.name,
         id: c.id,
       }
