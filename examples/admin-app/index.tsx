@@ -1,11 +1,11 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import { Loading } from 'bonde-components';
-import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
+import { BondeSessionProvider, BondeSessionUI } from '../../.';
 import HomePage from './HomePage';
 
 const history = createBrowserHistory();
@@ -20,6 +20,23 @@ const TextLoading = ({ fetching }) => {
   return <Loading fullsize message={messages[fetching]} />
 }
 
+const PagesRoute = () => {
+  const location = useLocation()
+
+  return (
+    <BondeSessionUI
+      indexRoute='/'
+      disableNavigation={location.pathname === '/'}
+    >
+      <Switch>
+        <Route exact path='/'>
+          <HomePage />
+        </Route>
+      </Switch>
+    </BondeSessionUI>
+  )
+}
+
 const extraConfig = {
   settings: 'http://admin-canary.bonde.devel:5001/settings',
   apiGraphql: 'https://api-graphql.staging.bonde.org/v1/graphql'
@@ -32,11 +49,9 @@ const App = () => {
       extraConfig={extraConfig}
       loading={TextLoading}
     >
-      <BondeSessionUI.Main indexRoute='/'>
-        <BondeSessionUI.Content>
-          <HomePage />
-        </BondeSessionUI.Content>
-      </BondeSessionUI.Main>
+      <Router history={history}>
+        <PagesRoute />
+      </Router>
     </BondeSessionProvider>
   );
 };
