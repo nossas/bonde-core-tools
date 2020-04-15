@@ -110,12 +110,12 @@ const CommunityMenu: React.FC<CommunityMenuProps> = ({
       {Object.keys(modules)
         .filter((key: string) => !!modules[key])
         .map((key: any) => {
-          const moduleHost: string = new URL('', config[key]).host;
-          const baseHost: string = new URL('', window.location.href).host;
+          const moduleHost: string = config[key];
+          const baseHost: string = window.location.href;
 
           return (
             <MenuItem
-              active={moduleHost === baseHost}
+              active={baseHost.startsWith(moduleHost)}
               inverted={inverted}
               key={key}
               icon={items[key][0]}
