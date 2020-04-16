@@ -1,12 +1,12 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
-import { Loading, Header, Text } from 'bonde-components';
-import { BondeSessionProvider, BondeSessionUI, useSession } from '../../.';
-// import LoginForm from './LoginForm'
+import { Loading } from 'bonde-components';
+import { BondeSessionProvider, BondeSessionUI } from '../../.';
+import HomePage from './HomePage';
 
 const history = createBrowserHistory();
 
@@ -14,55 +14,45 @@ const TextLoading = ({ fetching }) => {
   const messages = {
     session: 'Carregando sessão...',
     user: 'Carregando usuário...',
-    communities: 'Carregando communities...'
+    communities: 'Carregando communities...',
+    redirect: 'Redirecionando para login...',
+    module: 'Redirecionando para módulo...'
   }
   return <Loading fullsize message={messages[fetching]} />
 }
 
-const ModulePublic = () => {
-  const { user, community } = useSession()
+const PagesRoute = () => {
+  const location = useLocation()
 
   return (
-    <div>
-      <Header.h3>Welcome {user.firstName}!</Header.h3>
-      {!!community && <Text>{community.name}</Text>}
-    </div>
+    <BondeSessionUI
+      indexRoute='/'
+      disableNavigation={location.pathname === '/'}
+    >
+      <Switch>
+        <Route exact path='/'>
+          <HomePage />
+        </Route>
+      </Switch>
+    </BondeSessionUI>
   )
 }
 
-const config = {
-  loginUrl: 'http://auth.bonde.devel:5000/auth/login',
-  crossStorageUrl: 'http://cross-storage.bonde.devel',
-  graphqlApiUrl: 'https://api-graphql.staging.bonde.org/v1/graphql'
+const extraConfig = {
+  settings: 'http://admin-canary.bonde.devel:5001/settings',
+  apiGraphql: 'https://api-graphql.staging.bonde.org/v1/graphql'
 }
 
 const App = () => {
   return (
-    <BondeSessionProvider loading={TextLoading} config={config} fetchData>
-      <BondeSessionUI.Main indexRoute='/'>
-        <BondeSessionUI.Content>
-          <ModulePublic />
-        </BondeSessionUI.Content>
-      </BondeSessionUI.Main>
-      {/* <Router history={history}>
-        <IsLogged path='/'>
-          <BondeSessionUI.Main indexRoute='/admin'>
-            <BondeSessionUI.Content>
-              <Redirect to='/admin' />
-              <Route exact path='/admin' component={UserInfo} />
-              <Route exact path='/admin/profile'>
-                <Header.h2>Profile</Header.h2>
-              </Route>
-            </BondeSessionUI.Content>
-          </BondeSessionUI.Main>
-        </IsLogged>
-        <NotAuthenticated path='/'>
-          <Redirect to='/auth/login' />
-        </NotAuthenticated>
-        <Route exact path='/login'>
-          <LoginForm />
-        </Route>
-      </Router> */}
+    <BondeSessionProvider
+      fetchData
+      extraConfig={extraConfig}
+      loading={TextLoading}
+    >
+      <Router history={history}>
+        <PagesRoute />
+      </Router>
     </BondeSessionProvider>
   );
 };

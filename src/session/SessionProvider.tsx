@@ -4,8 +4,10 @@ import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
 import FetchCommunities from './FetchCommunities';
-import { SessionContext, Config } from './types';
+import { SessionContext } from './types';
 import nextURI from './nextURI';
+import settings from '../settings';
+import { Config, Environment } from '../settings/types';
 
 /**
  * Responsible to control session used on cross-storage
@@ -16,30 +18,40 @@ const Context = createContext({
 });
 
 interface LoadingProps {
-  fetching: 'session';
+  fetching: 'session' | 'redirect' | 'module';
 }
 
 interface SessionProviderProps {
   children: any;
   loading: React.FC<LoadingProps>;
+  environment: Environment;
+  // For props fetchData true, userInfo and communities are fetched. Default: false
   fetchData?: boolean;
-  config: Config;
+  extraConfig?: Config;
 }
 
 const SessionProvider: React.FC<SessionProviderProps> = ({
   children,
-  loading: Loading,
+  environment,
+  extraConfig,
   fetchData,
-  config,
+  loading: Loading,
 }) => {
+  // 0. Start controller states
+  const [redirecting, setRedirecting] = useState(false);
   const [token, setToken] = useState(undefined);
   const [signing, setSigning] = useState(true);
   const [refetch, setRefetch] = useState(0);
   const [community, setCommunity] = useState(undefined);
 
-  const storage = new SessionStorage(config.crossStorageUrl);
+  // 1. Merge settings to start BondeSessionProvider requests
+  const config = Object.assign({}, settings(environment), extraConfig);
+
+  // 2. Create a SessionStorage client connect on cross-storage
+  const storage = new SessionStorage(config.crossStorage);
 
   const fetchSession = () => {
+    // Function to fetch a shared session
     storage
       .getAsyncSession()
       .then(({ token: stoken, community: scommunity }: any = {}) => {
@@ -55,8 +67,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       .catch((err: any) => {
         // TODO: change url admin-canary
         if (err && err.message === 'unauthorized') {
-          if (!!config.loginUrl) {
-            window.location.href = nextURI(config.loginUrl);
+          if (config && config.accounts) {
+            window.location.href = nextURI(config.accounts);
           }
 
           setToken(undefined);
@@ -81,36 +93,44 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     storage
       .logout()
       .then(() => {
-        if (config.loginUrl) {
-          window.location.href = nextURI(config.loginUrl);
+        if (config && config.accounts) {
+          window.location.href = config.accounts;
         }
 
         return Promise.resolve();
       })
       .catch((err: any) => console.log('err', err)); // TODO: Tratar erros */
 
-  const onChange = ({ community }: any) => {
+  const onChange = ({ community, url }: any) => {
     if (!!community) {
       storage.setAsyncItem('community', community);
       setCommunity(community);
     }
+    if (!!url) {
+      window.location.href = url;
+      setRedirecting(true);
+    }
   };
 
   const session = {
+    storage,
     signing,
     token,
     community,
     onChange,
     login,
     logout,
+    config,
     isLogged: !!token,
     loading: Loading,
   };
 
   return signing ? (
     <Loading fetching="session" />
+  ) : redirecting ? (
+    <Loading fetching="module" />
   ) : (
-    <ApolloProvider client={createGraphQLClient(config.graphqlApiUrl, session)}>
+    <ApolloProvider client={createGraphQLClient(config.apiGraphql, session)}>
       {fetchData && session.isLogged ? (
         <FetchUser loading={Loading} logout={logout}>
           {/* Check token validate and recovery user infos */}
@@ -130,7 +150,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
           )}
         </FetchUser>
       ) : fetchData && !session.isLogged ? (
-        <h3>Redirecionar para Módulo de Autenticação</h3>
+        <Loading fetching="redirect" />
       ) : (
         <Context.Provider value={session}>{children}</Context.Provider>
       )}
@@ -139,6 +159,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
 };
 
 SessionProvider.defaultProps = {
+  environment: 'development',
   fetchData: false,
 };
 
