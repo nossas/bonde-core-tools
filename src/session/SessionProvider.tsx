@@ -135,10 +135,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
         <FetchUser loading={Loading} logout={logout}>
           {/* Check token validate and recovery user infos */}
           {(user: any) => (
-            <FetchCommunities
-              loading={Loading}
-              variables={{ userId: user.user.id }}
-            >
+            <FetchCommunities loading={Loading}>
               {(communities: any) => (
                 <Context.Provider
                   value={{ ...session, ...user, ...communities }}
