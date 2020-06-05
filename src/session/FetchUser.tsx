@@ -11,6 +11,7 @@ const FETCH_USER = gql`
       email
       createdAt
       avatar
+      isAdmin
     }
   }
 `;
