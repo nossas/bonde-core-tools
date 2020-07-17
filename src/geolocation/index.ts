@@ -1,4 +1,4 @@
-import { Signale } from 'signale';
+import logger from 'pino';
 import axios from 'axios';
 import {
   GoogleMapsResponse,
@@ -7,7 +7,7 @@ import {
   ComposeAddress,
 } from './types';
 
-const log = new Signale();
+const log = logger();
 
 const getCityStateAndZipcode = (
   addressComponents: AddressComponent
@@ -75,13 +75,13 @@ export const processGeolocation = (
 
     // log(i);
 
-    log.success('returned valid individual geolocation data');
+    log.info('returned valid individual geolocation data');
 
     return i;
   }
 
   if (data && data.status === 'ZERO_RESULTS') {
-    log.error(
+    log.warn(
       `google maps return with zero result (email, address): '${userEmail}', ${searchAddress}`
     );
   }
@@ -112,10 +112,10 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
       }
     );
 
-    log.success('google maps responded!');
+    log.info('google maps responded!');
 
     if (response.data && response.data.error_message) {
-      log.error(
+      log.warn(
         `google maps response failed (email, address): '${email}', ${address}`,
         response.data.error_message
       );
@@ -124,7 +124,7 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
 
     return processGeolocation(email, address, response.data);
   } catch (e) {
-    log.error(
+    log.warn(
       `google maps response failed (email, address): '${email}', ${address}`,
       e
     );
