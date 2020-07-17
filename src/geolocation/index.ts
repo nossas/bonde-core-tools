@@ -1,4 +1,3 @@
-import logger from 'pino';
 import axios from 'axios';
 import {
   GoogleMapsResponse,
@@ -6,8 +5,9 @@ import {
   AddressComponent,
   ComposeAddress,
 } from './types';
+import logger from '../logger';
 
-const log = logger();
+const log = logger.child({ module: 'geolocation' });
 
 const getCityStateAndZipcode = (
   addressComponents: AddressComponent
@@ -116,7 +116,7 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
 
     if (response.data && response.data.error_message) {
       log.warn(
-        `google maps response failed (email, address): '${email}', ${address}`,
+        `google maps response failed (email, address): '${email}', ${address} %o`,
         response.data.error_message
       );
       return processGeolocation(email, address, undefined);
@@ -125,7 +125,7 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
     return processGeolocation(email, address, response.data);
   } catch (e) {
     log.warn(
-      `google maps response failed (email, address): '${email}', ${address}`,
+      `google maps response failed (email, address): '${email}', ${address} %o`,
       e
     );
     return processGeolocation(email, address, undefined);
