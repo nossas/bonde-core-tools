@@ -33,7 +33,9 @@ const UserDropdown = () => {
                   img,
                   label: (
                     <div>
+                      {/* eslint-disable-next-line react/jsx-pascal-case */}
                       <Header.h4>{label}</Header.h4>
+                      {/* eslint-disable-next-line react/jsx-pascal-case */}
                       <Header.h5>{email}</Header.h5>
                     </div>
                   ),

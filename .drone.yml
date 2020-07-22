@@ -34,7 +34,7 @@ pipeline:
     group: publish
     when:
       status: success
-      branch: [release/*]
+      branch: [release/*, feature/*, hotfix/*]
 
   # notify:
   #   image: plugins/slack

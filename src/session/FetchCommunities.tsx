@@ -3,8 +3,8 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 
 const FETCH_RELATED_COMMUNITIES = gql`
-  query RelatedCommunities($userId: Int!) {
-    communities(where: { community_users: { user_id: { _eq: $userId } } }) {
+  query RelatedCommunities {
+    communities {
       id
       name
       city
@@ -31,10 +31,8 @@ const FETCH_RELATED_COMMUNITIES = gql`
   }
 `;
 
-export default ({ children, variables, loading: Loading }: any) => {
-  const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES, {
-    variables,
-  });
+export default ({ children, loading: Loading }: any) => {
+  const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES);
 
   if (loading) return <Loading fetching="communities" />;
 
