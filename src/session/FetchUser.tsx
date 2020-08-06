@@ -1,6 +1,5 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, gql } from '@apollo/client';
 
 const FETCH_USER = gql`
   query CurrentUser {

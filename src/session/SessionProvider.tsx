@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
