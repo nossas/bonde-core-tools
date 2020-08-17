@@ -7,6 +7,7 @@ export type User = {
   email: string;
   createdAt: string;
   avatar?: string;
+  isAdmin?: boolean;
 };
 
 export type Community = {
