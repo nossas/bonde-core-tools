@@ -21,6 +21,7 @@ const FETCH_RELATED_COMMUNITIES = gql`
       modules
       recipient {
         id
+        pagarme_recipient_id
         transfer_day: recipient(path: "transfer_day")
         transfer_interval: recipient(path: "transfer_interval")
         transfer_enabled: recipient(path: "transfer_enabled")
