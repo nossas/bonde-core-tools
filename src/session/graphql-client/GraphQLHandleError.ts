@@ -1,12 +1,12 @@
 import { ApolloLink, Observable } from 'apollo-link';
 
 export const handleErrorMiddleware = (errorHandler: any) => {
-  return new ApolloLink((operation, forward) => {
-    return new Observable(observer => {
+  return new ApolloLink((operation: any, forward: any) => {
+    return new Observable((observer: any) => {
       let subscription: any;
       try {
         subscription = forward(operation).subscribe({
-          next: result => {
+          next: (result: any) => {
             if (result.errors) {
               errorHandler({
                 graphQLErrors: result.errors,
@@ -16,7 +16,7 @@ export const handleErrorMiddleware = (errorHandler: any) => {
             }
             observer.next(result);
           },
-          error: error => {
+          error: (error: any) => {
             errorHandler({
               operation,
               networkError: error,

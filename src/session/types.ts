@@ -39,6 +39,7 @@ export type SessionContext = {
   communities: Community[];
   config: Config;
   onChange: Function;
+  onChangeAsync: Function;
   login: Function;
   logout: Function;
 };
