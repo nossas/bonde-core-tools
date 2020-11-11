@@ -112,12 +112,21 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     }
   };
 
+  const onChangeAsync = async (props: any) => {
+    return new Promise((resolve: any) => {
+      onChange(props);
+
+      return resolve();
+    });
+  };
+
   const session = {
     storage,
     signing,
     token,
     community,
     onChange,
+    onChangeAsync,
     login,
     logout,
     config,
