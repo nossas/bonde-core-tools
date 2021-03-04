@@ -27,6 +27,10 @@ export type Community = {
   email_template_from?: string;
   modules?: any;
   recipient?: any;
+  signature?: {
+    name: string
+    url: string
+  }
 };
 
 export type SessionContext = {

@@ -19,6 +19,12 @@ const FETCH_RELATED_COMMUNITIES = gql`
       facebook_app_id
       email_template_from
       modules
+
+      signature {
+        name
+        url
+      }
+
       recipient {
         id
         pagarme_recipient_id
