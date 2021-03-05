@@ -28,9 +28,9 @@ export type Community = {
   modules?: any;
   recipient?: any;
   signature?: {
-    name: string
-    url: string
-  }
+    name: string;
+    url: string;
+  };
 };
 
 export type SessionContext = {
@@ -43,10 +43,10 @@ export type SessionContext = {
   community?: Community;
   communities: Community[];
   config: Config;
-  onChange: Function;
-  onChangeAsync: Function;
-  login: Function;
-  logout: Function;
+  onChange: any;
+  onChangeAsync: any;
+  login: any;
+  logout: any;
 };
 
 export type UserContext = {
