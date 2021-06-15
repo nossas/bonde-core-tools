@@ -11,6 +11,8 @@ const UserDropdown = () => {
   const { user, logout } = useSession();
   const name = `${user.firstName} ${user.lastName}`;
 
+  console.log('UserDropdown render');
+
   return (
     <Dropdown
       selectable={false}
@@ -23,32 +25,16 @@ const UserDropdown = () => {
             src: user.avatar || 'http://via.placeholder.com/35x35?text=U',
             alt: name,
           },
-          label: name,
-          email: user.email,
-          render: ({ value }: any) => {
-            const { img, label, email } = value;
-            return (
-              <DropdownImageItem
-                value={{
-                  img,
-                  label: (
-                    <div>
-                      {/* eslint-disable-next-line react/jsx-pascal-case */}
-                      <Header.h4>{label}</Header.h4>
-                      {/* eslint-disable-next-line react/jsx-pascal-case */}
-                      <Header.h5>{email}</Header.h5>
-                    </div>
-                  ),
-                }}
-              />
-            );
-          },
+          name: 'user',
+          label: (
+            <div>
+              {/* eslint-disable-next-line react/jsx-pascal-case */}
+              <Header.H4>{name}</Header.H4>
+              {/* eslint-disable-next-line react/jsx-pascal-case */}
+              <Header.H5>{user.email}</Header.H5>
+            </div>
+          ),
         },
-        // {
-        //   icon: 'User',
-        //   label: 'Perfil',
-        //   name: 'profile',
-        // },
         {
           icon: 'Close',
           label: 'Logout',
@@ -56,10 +42,14 @@ const UserDropdown = () => {
         },
       ]}
       onSelect={({ name }: any) => {
+        console.log('UserDropdown onSelect', { name });
         if (name === 'logout') return logout();
         if (name === 'profile') return 'asdasdasd';
       }}
-      dropdownItem={DropdownIconItem}
+      dropdownItem={(props: any) => {
+        if (props.value.img) return <DropdownImageItem {...props} />;
+        else return <DropdownIconItem {...props} />;
+      }}
     />
   );
 };

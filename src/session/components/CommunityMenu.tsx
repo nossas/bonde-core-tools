@@ -49,9 +49,9 @@ MenuStyled.defaultProps = {
 
 interface MenuItemProps {
   active?: boolean;
-  icon: any;
+  icon: any; // eslint-disable-line react/prop-types
   title: string;
-  onClick: Function;
+  onClick: any; // eslint-disable-line react/prop-types
   inverted?: boolean;
 }
 
@@ -63,7 +63,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
   active,
 }) => (
   <Button
-    className={active ? 'active' : null}
+    className={active ? 'active' : ''}
     dark={!inverted}
     light={inverted}
     onClick={onClick}
