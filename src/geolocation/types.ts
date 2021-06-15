@@ -22,7 +22,7 @@ export type GoogleMapsResponse = {
 };
 
 export type IndividualGeolocation = {
-  cep: string;
+  cep?: string;
   address: string;
   state: string | null;
   city: string;
