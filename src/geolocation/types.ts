@@ -43,3 +43,23 @@ export type ComposeAddress = {
   neighborhood?: string;
   email: string;
 };
+
+export type BrasilApiResponse = {
+  statusText: string;
+  data: BrasilApiResponseData;
+}
+
+export type BrasilApiResponseData = {
+  cep: string,
+  state: string,
+  city: string,
+  neighborhood: string,
+  street: string,
+  service: string,
+}
+
+export type LatLngAddressWithOpenCage = {
+  latitude: string | null;
+  longitude: string | null;
+  address: string | null;
+}

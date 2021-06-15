@@ -4,6 +4,9 @@ import {
   IndividualGeolocation,
   AddressComponent,
   ComposeAddress,
+  BrasilApiResponse,
+  LatLngAddressWithOpenCage,
+  BrasilApiResponseData,
 } from './types';
 import logger from '../logger';
 
@@ -43,7 +46,7 @@ const getCityStateAndZipcode = (
   return [state, city, zipcode];
 };
 
-export const processGeolocation = (
+export const processGoogleResponse = (
   userEmail: string,
   searchAddress: string,
   data?: GoogleMapsResponse
@@ -100,6 +103,13 @@ export const processGeolocation = (
 
 export const getGoogleGeolocation = async (address: string, email: string) => {
   try {
+    const { GOOGLE_MAPS_API_KEY } = process.env;
+    if (!GOOGLE_MAPS_API_KEY) {
+      throw new Error(
+        'Please specify the `GOOGLE_MAPS_API_KEY` environment variable.'
+      );
+    }
+
     log.info(`requesting google with address ${address}...`);
     const response: { data: GoogleMapsResponse } = await axios.post(
       'https://maps.googleapis.com/maps/api/geocode/json',
@@ -107,7 +117,7 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
       {
         params: {
           address,
-          key: process.env.GOOGLE_MAPS_API_KEY,
+          key: GOOGLE_MAPS_API_KEY,
         },
       }
     );
@@ -119,16 +129,109 @@ export const getGoogleGeolocation = async (address: string, email: string) => {
         `google maps response failed (email, address): '${email}', ${address} %o`,
         response.data.error_message
       );
-      return processGeolocation(email, address, undefined);
+      return processGoogleResponse(email, address, undefined);
     }
 
-    return processGeolocation(email, address, response.data);
+    return processGoogleResponse(email, address, response.data);
   } catch (e) {
     log.warn(
       `google maps response failed (email, address): '${email}', ${address} %o`,
       e
     );
-    return processGeolocation(email, address, undefined);
+    return processGoogleResponse(email, address, undefined);
+  }
+};
+
+const getLatLngAddressWithOpenCage = async (
+  { state, city, neighborhood, street }: BrasilApiResponseData,
+  email: string
+): Promise<LatLngAddressWithOpenCage> => {
+  const completeAddress = `${street}, ${neighborhood}, ${city}, ${state}`;
+  const apikey = process.env.GEOCODING_API_KEY;
+  const apiUrl = 'https://api.opencagedata.com/geocode/v1/json';
+  const requestUrl = `${apiUrl}?key=${apikey}&q=${encodeURIComponent(
+    completeAddress
+  )}&pretty=1&no_annotations=1`;
+
+  try {
+    log.info(
+      `requesting open cage with complete address ${completeAddress}...`
+    );
+    const geolocation = await axios.get(requestUrl);
+
+    log.info(`Open cage responded!`);
+
+    return {
+      latitude: geolocation[0].geometry.lat.toString(),
+      longitude: geolocation[0].geometry.lng.toString(),
+      address: geolocation[0].formatted,
+    };
+  } catch (e) {
+    log.error(
+      `Open cage response failed (email, zipcode): '${email}', ${completeAddress} %o`,
+      e
+    );
+
+    return {
+      latitude: null,
+      longitude: null,
+      address: null,
+    };
+  }
+};
+
+const getBrasilApiLocation = async (
+  zipcode: string,
+  email: string
+): Promise<IndividualGeolocation> => {
+  const geolocationUnkown: IndividualGeolocation = {
+    latitude: null,
+    longitude: null,
+    address: `Endereço não encontrado - ${zipcode}`,
+    state: null,
+    city: 'ZERO_RESULTS',
+    cep: 'ZERO_RESULTS',
+  };
+
+  try {
+    if (!process.env.GEOCODING_API_KEY) {
+      throw new Error(
+        'Please specify the `GEOCODING_API_KEY` environment variable.'
+      );
+    }
+
+    log.info(`requesting BrasilAPI with zipcode ${zipcode}...`);
+    const response: BrasilApiResponse = await axios.get(
+      `https://brasilapi.com.br/api/cep/v1/${zipcode}`
+    );
+    log.info('BrasilAPI responded!');
+
+    const { state, city, cep } = response.data;
+
+    const { latitude, longitude, address } = await getLatLngAddressWithOpenCage(
+      response.data,
+      email
+    );
+
+    if (response.statusText === 'OK' && latitude && longitude && address) {
+      return {
+        latitude,
+        longitude,
+        address,
+        state,
+        city,
+        cep,
+      };
+    }
+
+    return geolocationUnkown;
+  } catch (e) {
+    log.error(
+      `BrasilAPI response failed (email, zipcode): '${email}', ${zipcode} %o`,
+      e
+    );
+
+    return geolocationUnkown;
   }
 };
 
@@ -140,12 +243,15 @@ export default async ({
   neighborhood,
   email,
 }: ComposeAddress): Promise<IndividualGeolocation> => {
-  const a = address ? `${address},` : '';
-  const n = neighborhood ? `${neighborhood},` : '';
-  const c = city ? `${city},` : '';
-  const s = state ? `${state},` : '';
-  const z = cep ? cep + ',BR' : '';
-  const composeSearchAddress = a + n + c + s + z;
+  if (state && city && address && neighborhood) {
+    const a = address ? `${address},` : '';
+    const n = neighborhood ? `${neighborhood},` : '';
+    const c = city ? `${city},` : '';
+    const s = state ? `${state},` : '';
+    const z = cep ? cep + ',BR' : '';
+    const composeSearchAddress = a + n + c + s + z;
 
-  return await getGoogleGeolocation(composeSearchAddress, email);
+    return getGoogleGeolocation(composeSearchAddress, email);
+  }
+  return getBrasilApiLocation(cep || '', email);
 };
