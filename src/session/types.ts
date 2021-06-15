@@ -7,6 +7,7 @@ export type User = {
   email: string;
   createdAt: string;
   avatar?: string;
+  isAdmin?: boolean;
 };
 
 export type Community = {
@@ -39,6 +40,7 @@ export type SessionContext = {
   communities: Community[];
   config: Config;
   onChange: Function;
+  onChangeAsync: Function;
   login: Function;
   logout: Function;
 };

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import SessionStorage from './SessionStorage';
 import createGraphQLClient from './graphql-client';
 import FetchUser from './FetchUser';
@@ -112,12 +112,21 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
     }
   };
 
+  const onChangeAsync = async (props: any) => {
+    return new Promise((resolve: any) => {
+      onChange(props);
+
+      return resolve();
+    });
+  };
+
   const session = {
     storage,
     signing,
     token,
     community,
     onChange,
+    onChangeAsync,
     login,
     logout,
     config,

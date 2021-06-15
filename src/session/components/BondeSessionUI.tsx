@@ -19,6 +19,7 @@ interface BondeSessionUIProps {
   indexRoute: string;
   bgColor?: string;
   disableNavigation?: boolean;
+  languageTool?: any;
 }
 
 const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
@@ -26,6 +27,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
   bgColor,
   disableNavigation,
   indexRoute,
+  languageTool: LanguageTool,
 }) => {
   return (
     <Main>
@@ -37,7 +39,13 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
         <UserDropdown />
       </Navbar>
       <Content bgColor={bgColor || 'rgb(247,247,247)'}>{children}</Content>
-      <Footer />
+      {LanguageTool ? (
+        <Footer>
+          <LanguageTool />
+        </Footer>
+      ) : (
+        <Footer />
+      )}
     </Main>
   );
 };
