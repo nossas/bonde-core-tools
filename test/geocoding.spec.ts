@@ -1,4 +1,4 @@
-import { processGeolocation } from '../src/geolocation';
+import { processGoogleResponse } from '../src/geolocation';
 import faker from 'faker/locale/pt_BR';
 
 describe('geolocation tests', () => {
@@ -58,7 +58,11 @@ describe('geolocation tests', () => {
   };
 
   it('should return valid output if there are results', () => {
-    const success = processGeolocation(email, validOutput.address, mapsSuccess);
+    const success = processGoogleResponse(
+      email,
+      validOutput.address,
+      mapsSuccess
+    );
     expect(success).toStrictEqual(validOutput);
   });
 
@@ -67,12 +71,20 @@ describe('geolocation tests', () => {
       results: [],
       status: 'ZERO_RESULTS',
     };
-    const failure = processGeolocation(email, validOutput.address, mapsFailure);
+    const failure = processGoogleResponse(
+      email,
+      validOutput.address,
+      mapsFailure
+    );
     expect(failure).toStrictEqual(invalidOutput);
   });
 
   it('should return invalid output if there was an error with Google Maps API', () => {
-    const failure = processGeolocation(email, validOutput.address, undefined);
+    const failure = processGoogleResponse(
+      email,
+      validOutput.address,
+      undefined
+    );
     expect(failure).toStrictEqual(invalidOutput);
   });
 });
