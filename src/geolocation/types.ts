@@ -64,10 +64,18 @@ export type LatLngAddressWithOpenCage = {
   address: string | null;
 };
 
-export type OpenCageResponse = Array<{
-  geometry: {
-    lat: string;
-    lng: string;
+export type OpenCageResponse = {
+  data: {
+    status: {
+      code: number;
+      message: string;
+    };
+    results: Array<{
+      geometry: {
+        lat: number;
+        lng: number;
+      };
+      formatted: string;
+    }>;
   };
-  formatted: string;
-}>;
+};

@@ -159,14 +159,22 @@ const getLatLngAddressWithOpenCage = async (
       `requesting open cage with complete address ${completeAddress}...`
     );
 
-    const geolocation: OpenCageResponse = await axios.get(requestUrl);
+    const {
+      data: { status, results },
+    }: OpenCageResponse = await axios.get(requestUrl);
 
     log.info(`Open cage responded!`);
 
+    if (status.code !== 200)
+      throw new Error(`Open cage responded with an error ${status.message}`);
+
+    if (results.length < 1)
+      throw new Error(`Open cage responded with zero results`);
+
     return {
-      latitude: geolocation[0].geometry.lat.toString(),
-      longitude: geolocation[0].geometry.lng.toString(),
-      address: geolocation[0].formatted,
+      latitude: results[0].geometry.lat.toString(),
+      longitude: results[0].geometry.lng.toString(),
+      address: results[0].formatted,
     };
   } catch (e) {
     log.error(
