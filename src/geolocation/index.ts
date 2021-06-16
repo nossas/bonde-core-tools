@@ -7,6 +7,7 @@ import {
   BrasilApiResponse,
   LatLngAddressWithOpenCage,
   BrasilApiResponseData,
+  OpenCageResponse,
 } from './types';
 import logger from '../logger';
 
@@ -157,7 +158,8 @@ const getLatLngAddressWithOpenCage = async (
     log.info(
       `requesting open cage with complete address ${completeAddress}...`
     );
-    const geolocation = await axios.get(requestUrl);
+
+    const geolocation: OpenCageResponse = await axios.get(requestUrl);
 
     log.info(`Open cage responded!`);
 
@@ -243,15 +245,16 @@ export default async ({
   neighborhood,
   email,
 }: ComposeAddress): Promise<IndividualGeolocation> => {
-  if (state && city && address && neighborhood) {
-    const a = address ? `${address},` : '';
-    const n = neighborhood ? `${neighborhood},` : '';
-    const c = city ? `${city},` : '';
-    const s = state ? `${state},` : '';
-    const z = cep ? cep + ',BR' : '';
-    const composeSearchAddress = a + n + c + s + z;
-
-    return getGoogleGeolocation(composeSearchAddress, email);
+  if (cep) {
+    return getBrasilApiLocation(cep || '', email);
   }
-  return getBrasilApiLocation(cep || '', email);
+
+  const a = address ? `${address},` : '';
+  const n = neighborhood ? `${neighborhood},` : '';
+  const c = city ? `${city},` : '';
+  const s = state ? `${state},` : '';
+  const z = cep ? cep + ',BR' : '';
+  const composeSearchAddress = a + n + c + s + z;
+
+  return getGoogleGeolocation(composeSearchAddress, email);
 };

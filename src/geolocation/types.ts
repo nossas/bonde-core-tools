@@ -47,19 +47,27 @@ export type ComposeAddress = {
 export type BrasilApiResponse = {
   statusText: string;
   data: BrasilApiResponseData;
-}
+};
 
 export type BrasilApiResponseData = {
-  cep: string,
-  state: string,
-  city: string,
-  neighborhood: string,
-  street: string,
-  service: string,
-}
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  service: string;
+};
 
 export type LatLngAddressWithOpenCage = {
   latitude: string | null;
   longitude: string | null;
   address: string | null;
-}
+};
+
+export type OpenCageResponse = Array<{
+  geometry: {
+    lat: string;
+    lng: string;
+  };
+  formatted: string;
+}>;
