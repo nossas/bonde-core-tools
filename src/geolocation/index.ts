@@ -47,6 +47,24 @@ const getCityStateAndZipcode = (
   return [state, city, zipcode];
 };
 
+const geolocationUnkown = (address: string): IndividualGeolocation => ({
+  latitude: null,
+  longitude: null,
+  address: `Endereço não encontrado - ${address}`,
+  state: null,
+  city: 'ZERO_RESULTS',
+  cep: 'ZERO_RESULTS',
+});
+
+const parseZipcode = (zipcode: string): string => {
+  const specialCharactersRegex = /[^\w\s+]/gi;
+  const whiteSpaceRegex = /\s+/g;
+
+  return zipcode
+    .replace(specialCharactersRegex, '')
+    .replace(whiteSpaceRegex, '');
+};
+
 export const processGoogleResponse = (
   userEmail: string,
   searchAddress: string,
@@ -90,16 +108,7 @@ export const processGoogleResponse = (
     );
   }
 
-  const i: IndividualGeolocation = {
-    latitude: null,
-    longitude: null,
-    address: `Endereço não encontrado - ${searchAddress}`,
-    state: null,
-    city: 'ZERO_RESULTS',
-    cep: 'ZERO_RESULTS',
-  };
-
-  return i;
+  return geolocationUnkown(searchAddress);
 };
 
 export const getGoogleGeolocation = async (address: string, email: string) => {
@@ -194,14 +203,7 @@ const getBrasilApiLocation = async (
   zipcode: string,
   email: string
 ): Promise<IndividualGeolocation> => {
-  const geolocationUnkown: IndividualGeolocation = {
-    latitude: null,
-    longitude: null,
-    address: `Endereço não encontrado - ${zipcode}`,
-    state: null,
-    city: 'ZERO_RESULTS',
-    cep: 'ZERO_RESULTS',
-  };
+  const cleanZipcode = parseZipcode(zipcode);
 
   try {
     if (!process.env.GEOCODING_API_KEY) {
@@ -210,9 +212,9 @@ const getBrasilApiLocation = async (
       );
     }
 
-    log.info(`requesting BrasilAPI with zipcode ${zipcode}...`);
+    log.info(`requesting BrasilAPI with zipcode ${cleanZipcode}...`);
     const response: BrasilApiResponse = await axios.get(
-      `https://brasilapi.com.br/api/cep/v1/${zipcode}`
+      `https://brasilapi.com.br/api/cep/v1/${cleanZipcode}`
     );
     log.info('BrasilAPI responded!');
 
@@ -234,14 +236,14 @@ const getBrasilApiLocation = async (
       };
     }
 
-    return geolocationUnkown;
+    return geolocationUnkown(cleanZipcode);
   } catch (e) {
     log.error(
-      `BrasilAPI response failed (email, zipcode): '${email}', ${zipcode} %o`,
+      `BrasilAPI response failed (email, zipcode): '${email}', ${cleanZipcode} %o`,
       e
     );
 
-    return geolocationUnkown;
+    return geolocationUnkown(cleanZipcode);
   }
 };
 
@@ -254,7 +256,7 @@ export default async ({
   email,
 }: ComposeAddress): Promise<IndividualGeolocation> => {
   if (cep) {
-    return getBrasilApiLocation(cep || '', email);
+    return getBrasilApiLocation(cep, email);
   }
 
   const a = address ? `${address},` : '';
