@@ -47,13 +47,21 @@ const getCityStateAndZipcode = (
   return [state, city, zipcode];
 };
 
-const geolocationUnkown = (address: string): IndividualGeolocation => ({
+type GeolocationUnkownParams = {
+  address?: string;
+  zipcode?: string;
+};
+
+const geolocationUnkown = ({
+  address,
+  zipcode,
+}: GeolocationUnkownParams): IndividualGeolocation => ({
   latitude: null,
   longitude: null,
-  address: `Endereço não encontrado - ${address}`,
+  address: `Endereço não encontrado - ${address || zipcode}`,
   state: null,
   city: 'ZERO_RESULTS',
-  cep: 'ZERO_RESULTS',
+  cep: zipcode || null,
 });
 
 const parseZipcode = (zipcode: string): string => {
@@ -95,8 +103,6 @@ export const processGoogleResponse = (
       cep: zipcode,
     };
 
-    // log(i);
-
     log.info('returned valid individual geolocation data');
 
     return i;
@@ -108,7 +114,7 @@ export const processGoogleResponse = (
     );
   }
 
-  return geolocationUnkown(searchAddress);
+  return geolocationUnkown({ address: searchAddress });
 };
 
 export const getGoogleGeolocation = async (address: string, email: string) => {
@@ -236,14 +242,14 @@ const getBrasilApiLocation = async (
       };
     }
 
-    return geolocationUnkown(cleanZipcode);
+    return geolocationUnkown({ zipcode: cleanZipcode });
   } catch (e) {
     log.error(
       `BrasilAPI response failed (email, zipcode): '${email}', ${cleanZipcode} %o`,
       e
     );
 
-    return geolocationUnkown(cleanZipcode);
+    return geolocationUnkown({ zipcode: cleanZipcode });
   }
 };
 
