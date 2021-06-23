@@ -22,7 +22,7 @@ export type GoogleMapsResponse = {
 };
 
 export type IndividualGeolocation = {
-  cep?: string;
+  cep: string | null;
   address: string;
   state: string | null;
   city: string;
@@ -42,4 +42,40 @@ export type ComposeAddress = {
   address?: string;
   neighborhood?: string;
   email: string;
+};
+
+export type BrasilApiResponse = {
+  statusText: string;
+  data: BrasilApiResponseData;
+};
+
+export type BrasilApiResponseData = {
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  service: string;
+};
+
+export type LatLngAddressWithOpenCage = {
+  latitude: string | null;
+  longitude: string | null;
+  address: string | null;
+};
+
+export type OpenCageResponse = {
+  data: {
+    status: {
+      code: number;
+      message: string;
+    };
+    results: Array<{
+      geometry: {
+        lat: number;
+        lng: number;
+      };
+      formatted: string;
+    }>;
+  };
 };
