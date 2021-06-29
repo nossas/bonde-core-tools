@@ -167,7 +167,7 @@ const getLatLngAddressWithOpenCage = async (
   const apiUrl = 'https://api.opencagedata.com/geocode/v1/json';
   const requestUrl = `${apiUrl}?key=${apikey}&q=${encodeURIComponent(
     completeAddress
-  )}&pretty=1&no_annotations=1`;
+  )}&countrycode=br&pretty=1&no_annotations=1`;
 
   try {
     log.info(
