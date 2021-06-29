@@ -208,7 +208,7 @@ const getLatLngAddressWithOpenCage = async (
 const getBrasilApiLocation = async (
   zipcode: string,
   email: string
-): Promise<IndividualGeolocation> => {
+): Promise<IndividualGeolocation | null> => {
   const cleanZipcode = parseZipcode(zipcode);
 
   try {
@@ -242,14 +242,14 @@ const getBrasilApiLocation = async (
       };
     }
 
-    return geolocationUnkown({ zipcode: cleanZipcode });
+    throw new Error('Insufficient response from BrasilAPI and OpenCage');
   } catch (e) {
     log.error(
       `BrasilAPI response failed (email, zipcode): '${email}', ${cleanZipcode} %o`,
       e
     );
 
-    return geolocationUnkown({ zipcode: cleanZipcode });
+    return null;
   }
 };
 
@@ -261,16 +261,21 @@ export default async ({
   neighborhood,
   email,
 }: ComposeAddress): Promise<IndividualGeolocation> => {
-  if (cep) {
-    return getBrasilApiLocation(cep, email);
-  }
-
   const a = address ? `${address},` : '';
   const n = neighborhood ? `${neighborhood},` : '';
   const c = city ? `${city},` : '';
   const s = state ? `${state},` : '';
   const z = cep ? cep + ',BR' : '';
   const composeSearchAddress = a + n + c + s + z;
+
+  if (cep) {
+    const geolocationFromCep = await getBrasilApiLocation(cep, email);
+
+    if (!geolocationFromCep)
+      return getGoogleGeolocation(composeSearchAddress, email);
+
+    return geolocationFromCep;
+  }
 
   return getGoogleGeolocation(composeSearchAddress, email);
 };
