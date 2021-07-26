@@ -1,14 +1,14 @@
 export default {
   development: {
     // Modules URLs
-    accounts: 'http://accounts.bonde.devel:5000/login',
-    settings: 'http://admin-canary.bonde.devel:5001/community/settings',
-    mobilization: 'http://app.bonde.devel:5002/mobilizations',
-    chatbot: 'http://chatbot.bonde.devel:5003',
-    redes: 'http://redes.bonde.devel:5004',
+    accounts: 'http://bonde.devel:5000/login',
+    settings: 'http://bonde.devel:5002/community/settings',
+    mobilization: 'http://bonde.devel:5001/mobilizations',
+    chatbot: 'http://bonde.devel:5005',
+    redes: 'http://bonde.devel:5004',
     // Essentials URLs
-    crossStorage: 'http://cross-storage.bonde.devel',
-    apiGraphql: 'https://api-graphql.staging.bonde.org/v1/graphql',
+    crossStorage: 'http://bonde.devel:5003',
+    apiGraphql: 'http://api-graphql.bonde.devel/v1/graphql',
   },
   staging: {
     // Modules URLs

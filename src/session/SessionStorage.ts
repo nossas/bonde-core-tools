@@ -4,7 +4,7 @@ class SessionStorage {
   token?: any;
   session: any = {};
   storage: any;
-  authenticated: boolean = false;
+  authenticated = false;
 
   constructor(uri: string) {
     // Init session client on cross-storage
