@@ -8,8 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "bonde-components": "0.0.2-alpha.2",
-    "bonde-core-tools": "0.0.9",
+    "bonde-components": "0.0.4-alpha.32",
+    "bonde-core-tools": "0.1.8-alpha.8",
     "graphql-tag": "^2.10.3",
     "react-app-polyfill": "^1.0.0",
     "react-final-form": "^6.3.5",
