@@ -3,14 +3,14 @@ workspace:
 
 pipeline:
   build:
-    image: node:12-alpine
+    image: node:14-alpine
     commands:
       - yarn
     when:
       event: [push, tag]
   
   tests:
-    image: node:12-alpine
+    image: node:14-alpine
     commands:
       - yarn run lint
       - yarn run test
