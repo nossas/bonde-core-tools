@@ -1,5 +1,12 @@
 import React from 'react';
-import { IconButton, Icon, Stack } from 'bonde-components';
+import {
+  IconButton,
+  Stack,
+  SettingsIcon,
+  PagesIcon,
+  BotIcon,
+  NetIcon
+} from 'bonde-components';
 import { useSession } from '../SessionProvider';
 import { Community } from '../types';
 
@@ -8,19 +15,18 @@ interface ItemsConfig {
 }
 
 const items: ItemsConfig = {
-  settings: ['Settings', 'Configurações'],
-  mobilization: ['Window', 'Mobilizações'],
-  redes: ['Network', 'Redes'],
-  chatbot: ['Bot', 'Chatbot'],
+  settings: [SettingsIcon, 'Configurações'],
+  mobilization: [PagesIcon, 'Mobilizações'],
+  redes: [NetIcon, 'Redes'],
+  chatbot: [BotIcon, 'Chatbot'],
 };
 
 interface CommunityMenuProps {
   community: Community;
   inverted?: boolean;
-  size?: string | string[]
 }
 
-const CommunityNavigation = ({ community, size }: CommunityMenuProps): React.ReactElement => {
+const CommunityNavigation = ({ community }: CommunityMenuProps): React.ReactElement => {
   const { onChange, config } = useSession();
   const { modules } = community;
 
@@ -29,19 +35,21 @@ const CommunityNavigation = ({ community, size }: CommunityMenuProps): React.Rea
   };
 
   return (
-    <Stack direction="row" size={size}>
+    <Stack direction="row" spacing={2}>
       {Object.keys(modules)
           .filter((key: string) => !!modules[key])
           .map((key: any, index: number) => {
             const moduleHost: string = new URL('', config[key]).host;
             const baseHost: string = new URL('', window.location.href).host;
+            const IconComponent: any = items[key][0];
 
             return (
               <IconButton
                 key={`community-navigation-${index}`}
                 variant="link"
+                colorScheme="gray"
                 title={items[key][1]}
-                icon={<Icon name={items[key][0]} />}
+                icon={<IconComponent boxSize={6} />}
                 onClick={handleClick(config[key])}
                 active={moduleHost === baseHost}
               />
