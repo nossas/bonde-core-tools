@@ -26,7 +26,7 @@ interface CommunityMenuProps {
   inverted?: boolean;
 }
 
-const CommunityNavigation = ({ community }: CommunityMenuProps): React.ReactElement => {
+const CommunityNavigation = ({ community, inverted }: CommunityMenuProps): React.ReactElement => {
   const { onChange, config } = useSession();
   const { modules } = community;
 
@@ -49,7 +49,13 @@ const CommunityNavigation = ({ community }: CommunityMenuProps): React.ReactElem
                 variant="link"
                 colorScheme="gray"
                 title={items[key][1]}
-                icon={<IconComponent boxSize={6} />}
+                icon={(
+                  <IconComponent
+                    color={inverted ? "white" : "gray.300"}
+                    _hover={{ color: "pink.100", stroke: "pink.100" }}
+                    boxSize={4}
+                  />
+                )}
                 onClick={handleClick(config[key])}
                 active={moduleHost === baseHost}
               />
