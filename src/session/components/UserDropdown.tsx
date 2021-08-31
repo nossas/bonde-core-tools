@@ -1,57 +1,46 @@
-import React from 'react';
 import {
-  Dropdown,
-  DropdownIconItem,
-  DropdownImageItem,
-  Header,
-} from 'bonde-components';
+	Menu,
+	MenuButton,
+	MenuList,
+	MenuItem,
+	MenuGroup,
+	CloseIcon,
+	Text,
+	Stack,
+	Heading
+} from "bonde-components"
 import { useSession } from '../SessionProvider';
 
-const UserDropdown = () => {
-  const { user, logout } = useSession();
-  const name = `${user.firstName} ${user.lastName}`;
+import React from 'react'
 
-  console.log('UserDropdown render');
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const ChakraDropdown = () => {
+	const { user, logout } = useSession();
+	const name = `${user.firstName} ${user.lastName}`;
 
-  return (
-    <Dropdown
-      selectable={false}
-      direction="right"
-      placeholder={name}
-      items={[
-        {
-          clickable: false,
-          img: {
-            src: user.avatar || 'http://via.placeholder.com/35x35?text=U',
-            alt: name,
-          },
-          name: 'user',
-          label: (
-            <div>
-              {/* eslint-disable-next-line react/jsx-pascal-case */}
-              <Header.H4>{name}</Header.H4>
-              {/* eslint-disable-next-line react/jsx-pascal-case */}
-              <Header.H5>{user.email}</Header.H5>
-            </div>
-          ),
-        },
-        {
-          icon: 'Close',
-          label: 'Logout',
-          name: 'logout',
-        },
-      ]}
-      onSelect={({ name }: any) => {
-        console.log('UserDropdown onSelect', { name });
-        if (name === 'logout') return logout();
-        if (name === 'profile') return 'asdasdasd';
-      }}
-      dropdownItem={(props: any) => {
-        if (props.value.img) return <DropdownImageItem {...props} />;
-        else return <DropdownIconItem {...props} />;
-      }}
-    />
-  );
-};
+	const title = (
+		<Stack spacing={2}>
+			<Heading as="h3" size="md" textTransform="capitalize">{name}</Heading>
+			<Text fontSize="md">{user.email}</Text>
+		</Stack>
+	)
+	return (
+		<Menu>
+			<MenuButton aria-label="User Menu" color="white" textTransform="uppercase">
+				{name}
+			</MenuButton>
+			
+			<MenuList>
+				<MenuGroup title={title}>
+					<MenuItem onClick={logout} icon={<CloseIcon boxSize={3}/>}>
+						Logout
+					</MenuItem>
+				</MenuGroup>
+			</MenuList>
+		</Menu>
+	)
+}
 
-export default UserDropdown;
+export default ChakraDropdown;
+
+
