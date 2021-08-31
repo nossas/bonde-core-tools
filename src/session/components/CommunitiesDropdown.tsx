@@ -3,25 +3,10 @@ import {
   Dropdown,
   DropdownImageInput,
   DropdownImageItem,
+  Stack
 } from 'bonde-components';
-import styled from 'styled-components';
 import { useSession } from '../SessionProvider';
 import CommunityMenu from './CommunityMenu';
-
-const WithMenu = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  ${DropdownImageItem} {
-    img {
-      border-radius: 30px;
-    }
-
-    &:hover {
-      background-color: rgb(247, 247, 247);
-    }
-  }
-`;
 
 const toItem = (c: any) =>
   !!c
@@ -41,7 +26,7 @@ const CommunitiesDropdown = () => {
   const { community, communities, onChange } = useSession();
 
   return (
-    <WithMenu>
+    <Stack direction="row" spacing={4}>
       <Dropdown
         placeholder="Selecione uma comunidade"
         item={toItem(community)}
@@ -55,7 +40,7 @@ const CommunitiesDropdown = () => {
         dropdownItem={DropdownImageItem}
       />
       {community && <CommunityMenu community={community} inverted />}
-    </WithMenu>
+    </Stack>
   );
 };
 
