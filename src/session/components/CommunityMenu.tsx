@@ -37,30 +37,30 @@ const CommunityNavigation = ({ community, inverted }: CommunityMenuProps): React
   return (
     <Stack direction="row" spacing={2}>
       {Object.keys(modules)
-          .filter((key: string) => !!modules[key])
-          .map((key: any, index: number) => {
-            const moduleHost: string = new URL('', config[key]).host;
-            const baseHost: string = new URL('', window.location.href).host;
-            const IconComponent: any = items[key][0];
+        .filter((key: string) => !!modules[key])
+        .map((key: any, index: number) => {
+          const moduleHost: string = new URL('', config[key]).host;
+          const baseHost: string = new URL('', window.location.href).host;
+          const IconComponent: any = items[key][0];
 
-            return (
-              <IconButton
-                key={`community-navigation-${index}`}
-                variant="link"
-                colorScheme="gray"
-                title={items[key][1]}
-                icon={(
-                  <IconComponent
-                    color={inverted ? "white" : "gray.300"}
-                    _hover={{ color: "pink.100", stroke: "pink.100" }}
-                    boxSize={4}
-                  />
-                )}
-                onClick={handleClick(config[key])}
-                active={moduleHost === baseHost}
-              />
-            );
-          })
+          return (
+            <IconButton
+              key={`community-navigation-${index}`}
+              variant="link"
+              colorScheme="gray"
+              title={items[key][1]}
+              icon={(
+                <IconComponent
+                  color={inverted ? "white" : "gray.300"}
+                  _hover={{ color: "pink.100", stroke: "pink.100" }}
+                  boxSize={4}
+                />
+              )}
+              onClick={handleClick(config[key])}
+              active={moduleHost === baseHost}
+            />
+          );
+        })
       }
     </Stack>
   );
