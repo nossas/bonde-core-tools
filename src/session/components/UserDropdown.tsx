@@ -28,7 +28,7 @@ const UserDropdown = () => {
     </Stack>
   )
   return (
-    <Menu variant="dropdown">
+    <Menu variant="link" colorScheme="pink">
       {({ isOpen }: any) => (
         <>
           <MenuButton
