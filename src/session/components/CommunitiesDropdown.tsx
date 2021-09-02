@@ -1,47 +1,66 @@
 import React from 'react';
 import {
-  Dropdown,
-  DropdownImageInput,
-  DropdownImageItem,
-  Stack
-} from 'bonde-components';
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  Image,
+  Stack,
+  Heading
+} from "bonde-components"
 import { useSession } from '../SessionProvider';
 import CommunityMenu from './CommunityMenu';
 
-const toItem = (c: any) =>
-  !!c
-    ? {
-        img: {
-          src:
-            c.image ||
-            `https://via.placeholder.com/100?text=${c.name.substring(0, 1)}`,
-          alt: c.name,
-        },
-        label: c.name,
-        id: c.id,
-      }
-    : undefined;
-
 const CommunitiesDropdown = () => {
-  const { community, communities, onChange } = useSession();
+  const { community, communities } = useSession();
 
   return (
-    <Stack direction="row" spacing={4}>
-      <Dropdown
-        placeholder="Selecione uma comunidade"
-        item={toItem(community)}
-        items={communities.map(toItem)}
-        onSelect={(value: any) => {
-          onChange({
-            community: communities.find((c: any) => c.id === value.id),
-          });
-        }}
-        dropdownInput={DropdownImageInput}
-        dropdownItem={DropdownImageItem}
-      />
+    <Stack direction="row" spacing={2}>
+      <Menu>
+        {({ isOpen }: any) => (
+          <>
+            <MenuButton
+              aria-label="User Menu"
+              as={Button}
+              variant="dropdown"
+              color="white"
+              rightIcon={isOpen ? <ArrowUpIcon boxSize={3} /> : <ArrowDownIcon boxSize={3} />}
+            >
+              {community?.name ? (
+                <Stack direction="row" spacing={4} alignItems="center">
+                  <Image
+                    src={community.image || `https://via.placeholder.com/100?text=${community.name.substring(0, 1)}`}
+                    boxSize={6}
+                    rounded="50%"
+                  />
+                  <Heading as="h6" size="xs">{community.name}</Heading>
+                </Stack>
+              ) : "Selecione uma comunidade"}
+            </MenuButton>
+
+            <MenuList maxH="300px" overflowY="scroll">
+              {communities.map((community) => (
+                <MenuItem key={community.id}>
+                  <Stack direction="row" spacing={4}>
+                    <Image
+                      src={community.image || `https://via.placeholder.com/100?text=${community.name.substring(0, 1)}`}
+                      boxSize={8}
+                      rounded="50%"
+                    />
+                    <Heading as="h5" size="sm">{community.name}</Heading>
+                  </Stack>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </>
+        )}
+      </Menu>
       {community && <CommunityMenu community={community} inverted />}
     </Stack>
-  );
+  )
 };
 
 export default CommunitiesDropdown;
