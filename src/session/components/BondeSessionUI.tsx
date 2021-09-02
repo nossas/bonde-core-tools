@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Main, Footer, Navbar, Flex } from 'bonde-components';
-
 import CommunitiesDropdown from './CommunitiesDropdown';
 import UserDropdown from './UserDropdown';
 
@@ -30,7 +29,6 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
   languageTool: LanguageTool,
 }) => {
   return (
-    
     <Main>
       <Navbar
         indexRoute={indexRoute}
@@ -51,7 +49,6 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
         <Footer />
       )}
     </Main>
-    
   );
 };
 
