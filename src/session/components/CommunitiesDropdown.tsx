@@ -9,7 +9,8 @@ import {
   ArrowUpIcon,
   Image,
   Stack,
-  Heading
+  Heading,
+  Text
 } from "bonde-components"
 import { useSession } from '../SessionProvider';
 import CommunityMenu from './CommunityMenu';
@@ -47,10 +48,10 @@ const CommunitiesDropdown = () => {
                   <Stack direction="row" spacing={4}>
                     <Image
                       src={community.image || `https://via.placeholder.com/100?text=${community.name.substring(0, 1)}`}
-                      boxSize={8}
+                      boxSize={9}
                       rounded="50%"
                     />
-                    <Heading as="h5" size="sm">{community.name}</Heading>
+                    <Text>{community.name}</Text>
                   </Stack>
                 </MenuItem>
               ))}
