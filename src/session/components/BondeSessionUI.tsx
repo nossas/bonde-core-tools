@@ -26,7 +26,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
   bgColor,
   disableNavigation,
   indexRoute,
-  languageTool: LanguageTool,
+  languageTool: LanguageTool
 }) => {
   return (
     <Main>
@@ -38,7 +38,6 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
           {disableNavigation ? <div /> : <CommunitiesDropdown />}
           <UserDropdown />
         </Flex>
-
       </Navbar>
       <Content bgColor={bgColor || 'rgb(247,247,247)'}>{children}</Content>
       {LanguageTool ? (
