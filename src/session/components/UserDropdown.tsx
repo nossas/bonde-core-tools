@@ -40,7 +40,7 @@ const UserDropdown = () => {
           >
             {name}
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex="3">
             <MenuGroup title={title}>
               <MenuItem onClick={logout} icon={<CloseIcon boxSize={3} />}>
                 Logout
