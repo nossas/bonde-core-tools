@@ -13,7 +13,7 @@ import CommunityMenu from "./CommunityMenu";
 
 const CommunitiesDropdown = () => {
   const { community, communities, onChange } = useSession();
-  
+
   return (
     <Stack direction="row" spacing={2}>
       <PerformDropdown>
@@ -25,7 +25,13 @@ const CommunitiesDropdown = () => {
                 rounded="50%"
                 src={community?.image || `https://via.placeholder.com/100?text=${community.name.substring(0, 1)}`}
               />
-              <Text fontSize="sm" fontWeight="extrabold" textTransform="uppercase">{community?.name}</Text>
+              <Text
+                color="white"
+                fontSize="sm"
+                fontWeight="extrabold"
+                textTransform="uppercase">
+                {community?.name}
+              </Text>
             </Stack>
           ) : "Selecione uma comunidade"}
         </PerformDropdownButton>
