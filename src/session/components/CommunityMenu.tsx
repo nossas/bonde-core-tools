@@ -41,15 +41,15 @@ const CommunityNavigation = ({ community, inverted }: CommunityMenuProps): React
         .map((key: any, index: number) => {
           const moduleHost: string = new URL('', config[key]).host;
           const baseHost: string = new URL('', window.location.href).host;
-          const hoverColor = (color: string) => ({ color: `${color}.100` });
+          const hoverColor = (color: string) => ({ color: `${color}.200` });
           const isActive = moduleHost === baseHost;
           const IconComponent: any = items[key][0];
 
           const colorSystem = inverted ? {
-            color: isActive ? "pink.100" : "white",
+            color: isActive ? "pink.200" : "white",
             _hover: isActive ? hoverColor("pink") : hoverColor("gray")
           } : {
-            color: "gray.300",
+            color: "gray.400",
             _hover: hoverColor("gray")
           }
 
