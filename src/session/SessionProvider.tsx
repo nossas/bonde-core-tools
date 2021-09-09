@@ -42,7 +42,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   const [token, setToken] = useState(undefined);
   const [signing, setSigning] = useState(true);
   const [refetch, setRefetch] = useState(0);
-  const [community, setCommunity] = useState(undefined);
+  const [community, setCommunity] = useState<any>(undefined);
 
   // 1. Merge settings to start BondeSessionProvider requests
   const config = Object.assign({}, settings(environment), extraConfig);
@@ -101,19 +101,20 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
       })
       .catch((err: any) => console.log('err', err)); // TODO: Tratar erros */
 
-  const onChange = ({ community, url }: any) => {
-    if (!!community) {
-      storage.setAsyncItem('community', community);
-      setCommunity(community);
+  const onChange = (props: any) => {
+    if (!!props.community) {
+      storage.setAsyncItem('community', props.community);
+      setCommunity(props.community);
     }
-    if (!!url) {
-      window.location.href = url;
+    if (!!props.url) {
+      window.location.href = props.url;
       setRedirecting(true);
     }
   };
 
   const onChangeAsync = async (props: any) => {
     return new Promise((resolve: any) => {
+      console.log("onChange promise", props);
       onChange(props);
 
       return resolve();
@@ -145,13 +146,16 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
           {/* Check token validate and recovery user infos */}
           {(user: any) => (
             <FetchCommunities loading={Loading}>
-              {(communities: any) => (
-                <Context.Provider
-                  value={{ ...session, ...user, ...communities }}
-                >
-                  {children}
-                </Context.Provider>
-              )}
+              {(communities: any) => {
+                console.log("communities", { communities, community });
+                return (
+                  <Context.Provider
+                    value={{ ...session, ...user, ...communities }}
+                  >
+                    {children}
+                  </Context.Provider>
+                )
+              }}
             </FetchCommunities>
           )}
         </FetchUser>

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Main, Footer, Navbar } from 'bonde-components';
-
+import { Main, Footer, Navbar, Flex } from 'bonde-components';
 import CommunitiesDropdown from './CommunitiesDropdown';
 import UserDropdown from './UserDropdown';
 
@@ -27,7 +26,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
   bgColor,
   disableNavigation,
   indexRoute,
-  languageTool: LanguageTool,
+  languageTool: LanguageTool
 }) => {
   return (
     <Main>
@@ -35,8 +34,10 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
         indexRoute={indexRoute}
         brand={disableNavigation ? 'default' : 'small'}
       >
-        {disableNavigation ? <div /> : <CommunitiesDropdown />}
-        <UserDropdown />
+        <Flex direction="row" grow={1} justify="space-between">
+          {disableNavigation ? <div /> : <CommunitiesDropdown />}
+          <UserDropdown />
+        </Flex>
       </Navbar>
       <Content bgColor={bgColor || 'rgb(247,247,247)'}>{children}</Content>
       {LanguageTool ? (

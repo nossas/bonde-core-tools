@@ -34,7 +34,7 @@ const FETCH_RELATED_COMMUNITIES = gql`
 `;
 
 export default ({ children, loading: Loading }: any) => {
-  const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES);
+  const { loading, error, data } = useQuery(FETCH_RELATED_COMMUNITIES, { fetchPolicy: "network-only" });
 
   if (loading) return <Loading fetching="communities" />;
 
