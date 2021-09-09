@@ -1,5 +1,5 @@
 {
-  "version": "0.1.8-alpha.9",
+  "version": "0.1.8",
   "license": "AGPL-3.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -47,7 +47,7 @@
   "dependencies": {
     "@apollo/client": "^3.1.2",
     "axios": "^0.21.1",
-    "bonde-components": "workspace:^0.0.5",
+    "bonde-components": "0.0.6",
     "cross-storage": "^1.0.0",
     "faker": "^4.1.0",
     "framer-motion": "^4",
