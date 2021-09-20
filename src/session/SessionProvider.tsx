@@ -28,6 +28,7 @@ interface SessionProviderProps {
   // For props fetchData true, userInfo and communities are fetched. Default: false
   fetchData?: boolean;
   extraConfig?: Config;
+  policies?: Record<string, any>
 }
 
 const SessionProvider: React.FC<SessionProviderProps> = ({
@@ -36,6 +37,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   extraConfig,
   fetchData,
   loading: Loading,
+  policies
 }) => {
   // 0. Start controller states
   const [redirecting, setRedirecting] = useState(false);
@@ -140,7 +142,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({
   ) : redirecting ? (
     <Loading fetching="module" />
   ) : (
-    <ApolloProvider client={createGraphQLClient(config.apiGraphql, session)}>
+    <ApolloProvider client={createGraphQLClient(config.apiGraphql, session, policies)}>
       {fetchData && session.isLogged ? (
         <FetchUser loading={Loading} logout={logout}>
           {/* Check token validate and recovery user infos */}

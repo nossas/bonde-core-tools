@@ -1,9 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-export default (uri: string, session: any = {}) => {
+export default (uri: string, session: any = {}, policies: any = {}): any => {
   const apolloClientOpts: any = {
     uri,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache(policies),
     headers: {
       'client-name': 'bonde-core-tools [web]',
       'client-version': '1.0.0',
