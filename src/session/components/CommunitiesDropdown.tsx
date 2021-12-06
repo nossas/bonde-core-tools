@@ -9,6 +9,7 @@ import {
   PerformDropdownButton
 } from "bonde-components";
 import { useSession } from "../SessionProvider";
+import { isMobile } from "react-device-detect";
 import CommunityMenu from "./CommunityMenu";
 
 const CommunitiesDropdown = () => {
@@ -51,7 +52,7 @@ const CommunitiesDropdown = () => {
           ))}
         </PerformDropdownList>
       </PerformDropdown>
-      {community && <CommunityMenu community={community} inverted />}
+      {community && !isMobile && <CommunityMenu community={community} inverted />}
     </Stack>
   )
 };

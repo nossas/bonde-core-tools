@@ -55,6 +55,7 @@
     "lint-staged": "^10.5.4",
     "pino": "^6.4.0",
     "react": "^16",
+    "react-device-detect": "^2.1.2",
     "react-dom": "^16"
   },
   "publishConfig": {
