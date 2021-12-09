@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Main, Footer, Navbar, Flex } from 'bonde-components';
-import { isMobile } from "react-device-detect";
+// import { isMobile } from "react-device-detect";
 import CommunitiesDropdown from './CommunitiesDropdown';
-import UserDropdown from './UserDropdown';
-import Logout from "./Logout";
+// import UserDropdown from './UserDropdown';
+// import Logout from "./Logout";
 
 interface ContentProps {
   bgColor: string;
@@ -38,7 +38,7 @@ const BondeSessionUI: React.FC<BondeSessionUIProps> = ({
       >
         <Flex direction="row" grow={1} justify="space-between">
           {disableNavigation ? <div /> : <CommunitiesDropdown />}
-          {isMobile ? <Logout /> : <UserDropdown />}
+          {/* {isMobile ? <Logout /> : <UserDropdown />} */}
         </Flex>
       </Navbar>
       <Content bgColor={bgColor || 'rgb(247,247,247)'}>{children}</Content>
