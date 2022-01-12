@@ -2,17 +2,17 @@ import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 
 const FETCH_USER = gql`
-  query CurrentUser {
-    currentUser {
-      id
-      firstName
-      lastName
-      email
-      createdAt
-      avatar
-      isAdmin
-    }
+query CurrentUser {
+  current_user  {
+    id
+    first_name
+    last_name
+    email
+    created_at
+    avatar
+    is_admin
   }
+}
 `;
 
 export default ({ children, loading: Loading, logout }: any) => {
