@@ -2,15 +2,15 @@ import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 
 const FETCH_USER = gql`
-  query CurrentUser {
-    currentUser {
+  query {
+    currentUser: get_current_user {
       id
-      firstName
-      lastName
       email
-      createdAt
       avatar
-      isAdmin
+      firstName: first_name
+      lastName: last_name
+      createdAt: created_at
+      isAdmin: is_admin
     }
   }
 `;
@@ -18,6 +18,7 @@ const FETCH_USER = gql`
 export default ({ children, loading: Loading, logout }: any) => {
   const { loading, error, data } = useQuery(FETCH_USER);
 
+  console.log("loading, error, data", { loading, error, data });
   if (loading) return <Loading fetching="user" />;
 
   if (error || !data.currentUser) {
@@ -25,5 +26,5 @@ export default ({ children, loading: Loading, logout }: any) => {
     logout();
   }
 
-  return children({ user: data.currentUser });
+  return children({ user: data.currentUser[0] });
 };
