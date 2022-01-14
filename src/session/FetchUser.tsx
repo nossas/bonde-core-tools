@@ -18,7 +18,6 @@ const FETCH_USER = gql`
 export default ({ children, loading: Loading, logout }: any) => {
   const { loading, error, data } = useQuery(FETCH_USER);
 
-  console.log("loading, error, data", { loading, error, data });
   if (loading) return <Loading fetching="user" />;
 
   if (error || !data.currentUser) {
