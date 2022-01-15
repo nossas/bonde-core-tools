@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
 import Cookies from 'js-cookie';
+import { Community } from './types';
 
 const FETCH_SESSION_QUERY = gql`
   query Session {
@@ -75,6 +76,7 @@ const Provider: React.FC<ProviderProperties> = ({
   const [fetching, setFetching] = useState(true);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [communities, setCommunities] = useState([]);
+  const [community, setCommunity] = useState(Cookies.get('communiy') as any);
   // ApolloClient
   const client = createGraphQLClient(uri);
   // AppDomain
@@ -106,6 +108,14 @@ const Provider: React.FC<ProviderProperties> = ({
     fetching,
     currentUser,
     communities,
+    community,
+    updateSession: (key: string, value: any) => new Promise((resolve) => {
+      if (key === 'community') {
+        Cookies.set('community', value, { path: '', domain: `.${appDomain}` });
+        setCommunity(value);
+      }
+      return resolve(value);
+    }),
     logout: () => {
       Cookies.remove('session', { path: '', domain: `.${appDomain}` });
       window.location.href = `https://accounts.${appDomain}/login`;
