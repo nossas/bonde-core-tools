@@ -67,6 +67,14 @@ interface ProviderProperties {
   fetchData?: boolean;
 }
 
+const getObjectCookie = (key: string): any | undefined => {
+  try {
+    return JSON.parse(Cookies.get(key) as any);
+  } catch(err) {
+    // console.log('getObjectCookie err', err);
+  }
+}
+
 const Provider: React.FC<ProviderProperties> = ({
   uri,
   fetchData,
@@ -76,7 +84,7 @@ const Provider: React.FC<ProviderProperties> = ({
   const [fetching, setFetching] = useState(true);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [communities, setCommunities] = useState([]);
-  const [community, setCommunity] = useState(Cookies.get('communiy') as any);
+  const [community, setCommunity] = useState(getObjectCookie('community'));
   // ApolloClient
   const client = createGraphQLClient(uri);
   // AppDomain
@@ -111,13 +119,15 @@ const Provider: React.FC<ProviderProperties> = ({
     community,
     updateSession: (key: string, value: any) => new Promise((resolve) => {
       if (key === 'community') {
-        Cookies.set('community', value, { path: '', domain: `.${appDomain}` });
+        Cookies.set('community', JSON.stringify(value), { path: '', domain: `.${appDomain}` });
         setCommunity(value);
       }
       return resolve(value);
     }),
     logout: () => {
+      console.log('logout -->>', { currentUser, community, communities });
       Cookies.remove('session', { path: '', domain: `.${appDomain}` });
+      Cookies.remove('community', { path: '', domain: `.${appDomain}` });
       window.location.href = `https://accounts.${appDomain}/login`;
     },
     apps: {
