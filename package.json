@@ -13,9 +13,6 @@
     "lint": "tsdx lint --fix",
     "prepare": "tsdx build"
   },
-  "peerDependencies": {
-    "react": ">=16"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -34,14 +31,20 @@
     "@types/faker": "^4.1.12",
     "@types/jest": "^25.2.3",
     "@types/js-cookie": "^3.0.1",
+    "@types/react": "^16.9 || ^17",
+    "@types/react-dom": "^16.8 || ^17",
     "@types/pino": "^6.3.0",
-    "@types/react": "^16.9.43",
-    "@types/react-dom": "^16",
     "@types/react-router-dom": "^5.1.3",
+    "react": "^16.9 || ^17",
+    "react-dom": "^16.8 || ^17",
     "husky": "^4.2.3",
     "ts-jest": "^26.1.2",
     "tsdx": "^0.12.3",
     "tslib": "^1.11.1"
+  },
+  "peerDependencies": {
+    "react": "^16.9 || ^17",
+    "react-dom": "^16.8 || ^17"
   },
   "dependencies": {
     "@apollo/client": "^3.1.2",
@@ -51,9 +54,7 @@
     "graphql": "^15.3.0",
     "js-cookie": "^3.0.1",
     "lint-staged": "^10.5.4",
-    "pino": "^6.4.0",
-    "react": "^16",
-    "react-dom": "^16"
+    "pino": "^6.4.0"
   },
   "publishConfig": {
     "access": "public"
