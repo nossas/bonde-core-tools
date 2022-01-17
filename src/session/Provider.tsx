@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
 import Cookies from 'js-cookie';
-import { Community } from './types';
+import nextURI from './nextURI'; 
 
 const FETCH_SESSION_QUERY = gql`
   query Session {
@@ -90,7 +90,7 @@ const Provider: React.FC<ProviderProperties> = ({
       setFetching(false);
     } catch (err) {
       if ((err as any).message === "field \"get_current_user\" not found in type: 'query_root'") {
-        window.location.href = `https://accounts.${appDomain}/login`
+        window.location.href = nextURI(`https://accounts.${appDomain}/login`);
       } else {
         console.log('Provider fetch:', err);
         setCurrentUser(undefined);
