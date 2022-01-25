@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
 import Cookies from 'js-cookie';
-import nextURI from './nextURI'; 
+import nextURI from './nextURI';
 
 const FETCH_SESSION_QUERY = gql`
   query Session {
@@ -70,7 +70,7 @@ interface ProviderProperties {
 const getObjectCookie = (key: string): any | undefined => {
   try {
     return JSON.parse(Cookies.get(key) as any);
-  } catch(err) {
+  } catch (err) {
     // console.log('getObjectCookie err', err);
   }
 }
@@ -88,17 +88,18 @@ const Provider: React.FC<ProviderProperties> = ({
   // ApolloClient
   const client = createGraphQLClient(uri);
   // AppDomain
-  const appDomain: string = environment === 'production' ? 'bonde.org' : 'staging.bonde.org';
+  const appDomain: string = environment === 'production' ? 'bonde.org' : 'bonde.devel';
+  const protocol: string = environment === 'production' ? 'https' : 'http';
 
   const fetch = async () => {
     try {
-      const { data } = await client.query({ query: FETCH_SESSION_QUERY  });
+      const { data } = await client.query({ query: FETCH_SESSION_QUERY });
       setCurrentUser(data.currentUser[0]);
       setCommunities(data.communities);
       setFetching(false);
     } catch (err) {
       if ((err as any).message === "field \"get_current_user\" not found in type: 'query_root'") {
-        window.location.href = nextURI(`https://accounts.${appDomain}/login`);
+        window.location.href = nextURI(`${protocol}://accounts.${appDomain}/login`);
       } else {
         console.log('Provider fetch:', err);
         setCurrentUser(undefined);
@@ -128,13 +129,13 @@ const Provider: React.FC<ProviderProperties> = ({
       console.log('logout -->>', { currentUser, community, communities });
       Cookies.remove('session', { path: '', domain: `.${appDomain}` });
       Cookies.remove('community', { path: '', domain: `.${appDomain}` });
-      window.location.href = `https://accounts.${appDomain}/login`;
+      window.location.href = `${protocol}://accounts.${appDomain}/login`;
     },
     apps: {
-      'settings': `https://admin-canary.${appDomain}/community/settings`,
-      'redes': `https://redes.${appDomain}`,
-      'chatbot': `https://chatbot.${appDomain}`,
-      'mobilization': `https://app.${appDomain}`
+      'settings': `${protocol}://admin-canary.${appDomain}/community/settings`,
+      'redes': `${protocol}://redes.${appDomain}`,
+      'chatbot': `${protocol}://chatbot.${appDomain}`,
+      'mobilization': `${protocol}://app.${appDomain}`
     }
   }
 
