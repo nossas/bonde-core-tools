@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
 import Cookies from 'js-cookie';
 import nextURI from './nextURI';
+import type { User } from './types';
 
 const FETCH_SESSION_QUERY = gql`
   query Session {
@@ -13,6 +14,12 @@ const FETCH_SESSION_QUERY = gql`
       lastName: last_name
       createdAt: created_at
       isAdmin: is_admin
+
+      permissions: community_users {
+        community_id
+        user_id
+        role
+      }
     }
 
     communities {
@@ -65,6 +72,7 @@ interface ProviderProperties {
   uri: string;
   environment: 'development' | 'staging' | 'production';
   fetchData?: boolean;
+  loadingComponent?: JSX.Element
 }
 
 const getObjectCookie = (key: string): any | undefined => {
@@ -79,17 +87,19 @@ const Provider: React.FC<ProviderProperties> = ({
   uri,
   fetchData,
   environment,
-  children
+  children,
+  loadingComponent
 }) => {
   const [fetching, setFetching] = useState(true);
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
   const [communities, setCommunities] = useState([]);
   const [community, setCommunity] = useState(getObjectCookie('community'));
   // ApolloClient
   const client = createGraphQLClient(uri);
   // AppDomain
-  const appDomain: string = environment === 'production' ? 'bonde.org' : 'bonde.devel';
-  const protocol: string = environment === 'production' ? 'https' : 'http';
+  const appDomain: string = environment === 'production' || environment === 'staging' ? 'bonde.org' : 'bonde.devel';
+  const protocol: string = environment === 'production' || environment === 'staging' ? 'https' : 'http';
+  const redirectDomain: string = environment === 'staging' ? `staging.${appDomain}` : appDomain;
 
   const fetch = async () => {
     try {
@@ -99,7 +109,7 @@ const Provider: React.FC<ProviderProperties> = ({
       setFetching(false);
     } catch (err) {
       if ((err as any).message === "field \"get_current_user\" not found in type: 'query_root'") {
-        window.location.href = nextURI(`${protocol}://accounts.${appDomain}/login`);
+        window.location.href = nextURI(`${protocol}://accounts.${redirectDomain}/login`);
       } else {
         console.log('Provider fetch:', err);
         setCurrentUser(undefined);
@@ -115,11 +125,17 @@ const Provider: React.FC<ProviderProperties> = ({
 
   const session = {
     fetching,
-    currentUser,
+    currentUser: {
+      ...currentUser,
+      hasAdminPermission: () => {
+        return currentUser?.isAdmin || currentUser?.permissions.filter((perm) => perm.community_id === community?.id && perm.role === 1)
+      }
+    },
     communities,
     community,
     updateSession: (key: string, value: any) => new Promise((resolve) => {
       if (key === 'community') {
+        // console.log("update cookie", { value });
         Cookies.set('community', JSON.stringify(value), { path: '', domain: `.${appDomain}` });
         setCommunity(value);
       }
@@ -129,19 +145,24 @@ const Provider: React.FC<ProviderProperties> = ({
       console.log('logout -->>', { currentUser, community, communities });
       Cookies.remove('session', { path: '', domain: `.${appDomain}` });
       Cookies.remove('community', { path: '', domain: `.${appDomain}` });
-      window.location.href = `${protocol}://accounts.${appDomain}/login`;
+      window.location.href = `${protocol}://accounts.${redirectDomain}/login`;
     },
     apps: {
-      'settings': `${protocol}://admin-canary.${appDomain}/community/settings`,
-      'redes': `${protocol}://redes.${appDomain}`,
-      'chatbot': `${protocol}://chatbot.${appDomain}`,
-      'mobilization': `${protocol}://app.${appDomain}`
+      'settings': `${protocol}://admin-canary.${redirectDomain}/community/settings`,
+      'redes': `${protocol}://redes.${redirectDomain}`,
+      'chatbot': `${protocol}://chatbot.${redirectDomain}`,
+      'mobilization': `${protocol}://app.${redirectDomain}`
     }
+  }
+
+  let loading: JSX.Element = 'Carregando sessão' as any;
+  if (!!loadingComponent) {
+    loading = loadingComponent
   }
 
   return (
     <ApolloProvider client={client}>
-      {fetchData && fetching ? 'Carregando sessão....' : (
+      {fetchData && fetching ? loading : (
         <Context.Provider value={session}>
           {children}
         </Context.Provider>
