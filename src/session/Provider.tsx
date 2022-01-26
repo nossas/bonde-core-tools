@@ -128,7 +128,7 @@ const Provider: React.FC<ProviderProperties> = ({
     currentUser: {
       ...currentUser,
       hasAdminPermission: () => {
-        return currentUser?.isAdmin || currentUser?.permissions.filter((perm) => perm.community_id === community?.id && perm.role === 1)
+        return currentUser?.isAdmin || (currentUser?.permissions.filter((perm) => perm.community_id === community?.id && perm.role === 1) || []).length > 0
       }
     },
     communities,
