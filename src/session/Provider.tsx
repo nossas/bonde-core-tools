@@ -53,17 +53,22 @@ const FETCH_SESSION_QUERY = gql`
 `;
 
 const createGraphQLClient = (uri: string) => {
-  const options = {
+  const headers: any = {
+    'client-name': 'bonde-core-tools [web]',
+    'client-version': '1.0.0'
+  };
+
+  const token = Cookies.get('session');
+  if (token) {
+    headers['authorization'] = `Bearer ${token}`;
+  }
+
+  return new ApolloClient({
     uri,
     cache: new InMemoryCache(),
     credentials: 'include',
-    headers: {
-      'client-name': 'bonde-core-tools [web]',
-      'client-version': '1.0.0'
-    }
-  };
-
-  return new ApolloClient(options);
+    headers
+  });
 }
 
 export const Context = createContext({});
