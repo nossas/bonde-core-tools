@@ -136,7 +136,6 @@ const Provider: React.FC<ProviderProperties> = ({
     community,
     updateSession: (key: string, value: any) => new Promise((resolve) => {
       if (key === 'community') {
-        // console.log("update cookie", { value });
         Cookies.set('community', JSON.stringify(value), { path: '/', domain: `.${appDomain}` });
         setCommunity(value);
       }
@@ -144,8 +143,8 @@ const Provider: React.FC<ProviderProperties> = ({
     }),
     logout: () => {
       console.log('logout -->>', { currentUser, community, communities });
-      Cookies.remove('session', { path: '', domain: `.${appDomain}` });
-      Cookies.remove('community', { path: '', domain: `.${appDomain}` });
+      Cookies.remove('session', { path: '/', domain: `.${appDomain}` });
+      Cookies.remove('community', { path: '/', domain: `.${appDomain}` });
       window.location.href = `${protocol}://accounts.${redirectDomain}/login`;
     },
     apps: {
