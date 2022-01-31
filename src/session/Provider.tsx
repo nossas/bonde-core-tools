@@ -125,6 +125,7 @@ const Provider: React.FC<ProviderProperties> = ({
 
   const session = {
     fetching,
+    token: Cookies.get('session'),
     currentUser: {
       ...currentUser,
       hasAdminPermission: () => {
