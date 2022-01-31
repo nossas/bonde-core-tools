@@ -137,7 +137,7 @@ const Provider: React.FC<ProviderProperties> = ({
     updateSession: (key: string, value: any) => new Promise((resolve) => {
       if (key === 'community') {
         // console.log("update cookie", { value });
-        Cookies.set('community', JSON.stringify(value), { path: '', domain: `.${appDomain}` });
+        Cookies.set('community', JSON.stringify(value), { path: '/', domain: `.${appDomain}` });
         setCommunity(value);
       }
       return resolve(value);
