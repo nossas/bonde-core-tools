@@ -1,5 +1,11 @@
 import { Config } from '../settings/types';
 
+export type CommunityUser = {
+  community_id: number;
+  user_id: number;
+  role: any;
+}
+
 export type User = {
   id: number;
   firstName: string;
@@ -8,6 +14,7 @@ export type User = {
   createdAt: string;
   avatar?: string;
   isAdmin?: boolean;
+  permissions: CommunityUser[];
 };
 
 export type Community = {
