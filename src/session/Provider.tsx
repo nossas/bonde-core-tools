@@ -106,6 +106,16 @@ const Provider: React.FC<ProviderProperties> = ({
   const protocol: string = environment === 'production' || environment === 'staging' ? 'https' : 'http';
   const redirectDomain: string = environment === 'staging' ? `staging.${appDomain}` : appDomain;
 
+  const logout = () => {
+    console.log('logout -->>', { currentUser, community, communities });
+    Cookies.remove('session', { path: '/', domain: `.${appDomain}` });
+    Cookies.remove('community', { path: '/', domain: `.${appDomain}` });
+    const uri = `${protocol}://accounts.${redirectDomain}/login`
+    if (uri !== window.location.href) {
+      window.location.href = nextURI(uri);
+    }
+  }
+
   const fetch = async () => {
     try {
       const { data } = await client.query({ query: FETCH_SESSION_QUERY });
@@ -114,7 +124,9 @@ const Provider: React.FC<ProviderProperties> = ({
       setFetching(false);
     } catch (err) {
       if ((err as any).message === "field \"get_current_user\" not found in type: 'query_root'") {
-        window.location.href = nextURI(`${protocol}://accounts.${redirectDomain}/login`);
+        logout();
+      } else if ((err as any).message === "Could not verify JWT: JWSError JWSInvalidSignature") {
+        logout();
       } else {
         console.log('Provider fetch:', err);
         setCurrentUser(undefined);
@@ -146,12 +158,7 @@ const Provider: React.FC<ProviderProperties> = ({
       }
       return resolve(value);
     }),
-    logout: () => {
-      console.log('logout -->>', { currentUser, community, communities });
-      Cookies.remove('session', { path: '/', domain: `.${appDomain}` });
-      Cookies.remove('community', { path: '/', domain: `.${appDomain}` });
-      window.location.href = `${protocol}://accounts.${redirectDomain}/login`;
-    },
+    logout,
     apps: {
       'settings': `${protocol}://admin-canary.${redirectDomain}/community/settings`,
       'redes': `${protocol}://redes.${redirectDomain}`,
